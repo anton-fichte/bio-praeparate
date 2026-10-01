@@ -1,29 +1,23 @@
 backend:
   name: git-gateway
-  branch: main # oder master, je nachdem wie dein Branch heißt
+  branch: main # oder master, je nach Repository
 
 media_folder: "images"
 public_folder: "/images"
 
 collections:
-  - name: "praeparate_sammlung"
+  - name: "praeparate_collection"
     label: "Präparate"
-    # Suchfelder direkt für diese Collection aktivieren
-    search_fields:
-      - "praeparat.name"
-      - "praeparat.ort"
-      - "praeparat.id"
-      - "praeparat.stichwoerter"
     files:
       - file: "daten.json"
-        label: "Präparate verwalten"
-        name: "praeparate_datei"
+        label: "Präparate Liste"
+        name: "praeparate_file"
         fields:
-          - label: "Alle Präparate"
+          - label: "Präparate"
             name: "praeparate"
             widget: "list"
-            # Zeigt Name und Ort direkt in der Listen-Übersicht an
-            summary: '{{fields.praeparat.name}} — 📍 {{fields.praeparat.ort}}'
+            # WICHTIG: Zeigt Name & Ort im Admin-Kasten an, damit das Suchfeld beides durchsuchen kann!
+            summary: '{{fields.praeparat.name}} ({{fields.praeparat.ort}})'
             fields:
               - label: "Präparat"
                 name: "praeparat"
@@ -37,5 +31,4 @@ collections:
                     widget: "list"
                     required: false
                     default: []
-                  - { label: "Bild", name: "bild", widget: "image" }
-                  
+                  - { label: "Bild", name: "bild", widget: "image", required: false }
