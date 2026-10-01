@@ -11,6 +11,18 @@
         ],
         "bild": "bilder/001.jpg"
       }
+    },
+    {
+      "praeparat": {
+        "id": "002",
+        "bild": "bilder/002.jpg",
+        "name": "mundschleimhaut",
+        "ort": "keine ahnung",
+        "stichwoerter": [
+          "mensch",
+          "zelle"
+        ]
+      }
     }
   ]
 }
