@@ -47,6 +47,18 @@
         "ort": "italien",
         "bild": "/bilder/8d83d9ed4567fa15456d8eec7557e60006a15576.avif"
       }
+    },
+    {
+      "praeparat": {
+        "stichwoerter": [
+          "Me",
+          "23"
+        ],
+        "id": "007",
+        "name": "California Bowl",
+        "ort": "Tomas Lichterfelde",
+        "bild": "/bilder/img_8027.jpeg"
+      }
     }
   ]
 }
