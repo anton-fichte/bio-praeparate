@@ -1,107 +1,148 @@
 let praeparate = [];
 
-// DOM-Elemente von der Hauptseite
 const container = document.getElementById("praeparate");
 const suchfeld = document.getElementById("suchfeld");
 const anzahl = document.getElementById("anzahl");
 
-// DOM-Elemente für das Detail-Modal (Punkt 3)
-const modal = document.getElementById("detail-modal");
-const modalBody = document.getElementById("modal-body");
-const modalClose = document.getElementById("modal-close");
 
-// Modal schließen bei Klick auf das 'X' oder außerhalb der Box
-if (modalClose) {
-    modalClose.onclick = () => modal.classList.add("hidden");
-}
-window.onclick = (event) => {
-    if (event.target === modal) {
-        modal.classList.add("hidden");
-    }
-};
+// Daten aus daten.json laden
 
-// Funktion: Öffnet das Detail-Fenster für ein bestimmtes Präparat
-function zeigeDetails(item) {
-    const stichwoerter = Array.isArray(item.stichwoerter) 
-        ? item.stichwoerter.join(", ") 
-        : (item.stichwoerter || "Keine Tags");
-
-    modalBody.innerHTML = `
-        <h2>${item.name || "Unbenanntes Präparat"}</h2>
-        <p style="color: #666; margin-top: -8px;"><strong>ID:</strong> ${item.id || "Keine ID"}</p>
-        
-        ${item.bild ? `<img src="${item.bild}" alt="${item.name}" style="width: 100%; max-height: 280px; object-fit: cover; border-radius: 8px; margin: 12px 0;">` : ""}
-        
-        <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-top: 10px;">
-            <p style="margin: 4px 0;"><strong>Standort / Aufbewahrung:</strong> ${item.ort || "Nicht angegeben"}</p>
-            <p style="margin: 4px 0;"><strong>Stichwörter:</strong> ${stichwoerter}</p>
-        </div>
-    `;
-    
-    modal.classList.remove("hidden");
-}
-
-// Daten laden & aufbereiten
+// Daten aus daten.json laden und CMS-Struktur glätten
 fetch("./daten.json")
     .then(response => response.json())
     .then(daten => {
+        // Prüfen, ob die Daten aus der 'praeparate'-Liste kommen
         const rohdaten = daten.praeparate || [];
 
-        // Wandelt verschachtelte Decap-CMS-Daten falls nötig flach um
+        // Falls Decap CMS ein 'praeparat'-Unterobjekt angelegt hat, entpacken wir es hier
         praeparate = rohdaten.map(eintrag => {
             return eintrag.praeparat ? eintrag.praeparat : eintrag;
         });
 
+        // Jetzt ruft er deine ganz normale anzeigen()-Funktion auf
         anzeigen();
     })
     .catch(error => {
-        console.error("Fehler beim Laden:", error);
+        console.error("Fehler beim Laden der Präparate:", error);
     });
 
-// Event-Listener für Suchfeld (Echtzeit-Suche)
-if (suchfeld) {
-    suchfeld.addEventListener("input", anzeigen);
-}
+// Präparate anzeigen
 
-// Hauptfunktion zum Rendern der Kärtchen
 function anzeigen() {
-    if (!container) return;
-    
-    container.innerHTML = "";
-    const suchbegriff = suchfeld ? suchfeld.value.toLowerCase().trim() : "";
+
+    const suchbegriff = suchfeld.value
+        .toLowerCase()
+        .trim();
+
 
     // Nach Suchbegriff filtern
+
     const ergebnisse = praeparate.filter(praeparat => {
+
         const name = praeparat.name || "";
         const ort = praeparat.ort || "";
-        const stichwoerter = praeparat.stichwoerter || [];
+
+        const stichwoerter =
+            praeparat.stichwoerter || [];
+
 
         const gesamterText = (
+
             name + " " +
             ort + " " +
-            (Array.isArray(stichwoerter) ? stichwoerter.join(" ") : stichwoerter)
+            stichwoerter.join(" ")
+
         ).toLowerCase();
+
 
         return gesamterText.includes(suchbegriff);
     });
 
-    // Kärtchen auf der Seite aufbauen
-    ergebnisse.forEach(item => {
-        const karte = document.createElement("div");
-        karte.className = "praeparat-karte";
-        
-        karte.innerHTML = `
-            <h3>${item.name || "Unbenannt"}</h3>
-            <p><strong>Standort:</strong> ${item.ort || "-"}</p>
+
+    // Ergebnisanzahl anzeigen
+
+    anzahl.textContent =
+        `${ergebnisse.length} Präparat` +
+        (ergebnisse.length !== 1 ? "e" : "") +
+        " gefunden";
+
+
+    // Alten Inhalt löschen
+
+    container.innerHTML = "";
+
+
+    // Keine Ergebnisse
+
+    if (ergebnisse.length === 0) {
+
+        container.innerHTML = `
+            <div class="keine-ergebnisse">
+                <h2>Keine Ergebnisse</h2>
+                <p>
+                    Zu deiner Suche wurde kein Präparat gefunden.
+                </p>
+            </div>
         `;
 
-        // PUNKT 3: Klick-Event anhängen, damit sich die Detailansicht öffnet!
-        karte.onclick = () => zeigeDetails(item);
+        return;
+    }
+
+
+    // Ergebnisse anzeigen
+
+    ergebnisse.forEach(praeparat => {
+
+        const karte = document.createElement("div");
+
+        karte.className = "praeparat";
+
+
+        // Stichwort-Tags erstellen
+
+        const tags =
+            (praeparat.stichwoerter || [])
+            .map(stichwort => {
+
+                return `
+                    <span class="tag">
+                        ${stichwort}
+                    </span>
+                `;
+
+            })
+            .join("");
+
+
+        // Karte erstellen
+
+        karte.innerHTML = `
+
+            <img
+                src="${praeparat.bild}"
+                alt="${praeparat.name}"
+            >
+
+            <h2>
+                ${praeparat.name}
+            </h2>
+
+            <p class="ort">
+                📍 ${praeparat.ort}
+            </p>
+
+            <div class="stichwoerter">
+                🏷️ ${tags}
+            </div>
+
+        `;
+
 
         container.appendChild(karte);
     });
-
-    if (anzahl) {
-        anzahl.textContent = ergebnisse.length;
-    }
 }
+
+
+// Suche bei jeder Eingabe aktualisieren
+
+suchfeld.addEventListener("input", anzeigen);
