@@ -2,8 +2,8 @@ backend:
   name: git-gateway
   branch: main # oder master
 
-media_folder: "images"
-public_folder: "/images"
+media_folder: "bilder"
+public_folder: "/bilder"
 
 collections:
   - name: "praeparate_collection"
@@ -16,8 +16,7 @@ collections:
           - label: "Präparate"
             name: "praeparate"
             widget: "searchable-list"
-            # Zusammenfassung: Zeigt ID, Name und Ort direkt in den Kacheln an
-            summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}}) ({{fields.praeparat.stichwoerter}})'
+            summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}})'
             fields:
               - label: "Präparat"
                 name: "praeparat"
