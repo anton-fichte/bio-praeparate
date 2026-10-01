@@ -23,6 +23,18 @@
           "zelle"
         ]
       }
+    },
+    {
+      "praeparat": {
+        "id": "003",
+        "name": "burger",
+        "ort": "ofen",
+        "stichwoerter": [
+          "lecker",
+          "bacon"
+        ],
+        "bild": "bilder/burger-rezept-5.jpg"
+      }
     }
   ]
 }
