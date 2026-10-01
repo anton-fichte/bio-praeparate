@@ -9,7 +9,7 @@
             "Zellwand",
             "Zellkern"
         ],
-        "bild": "bilder/001.jpg"
+
     },
     {
         "id": "002",
@@ -21,6 +21,6 @@
             "Epithel",
             "Mensch"
         ],
-        "bild": "bilder/002.jpg"
+        
     }
 ]
