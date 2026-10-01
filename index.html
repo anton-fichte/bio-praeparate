@@ -3,22 +3,34 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bio-Präparatesammlung</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>🔬 Bio-Präparatesammlung</h1>
+    <header>
+        <h1>🔬 Bio-Präparatesammlung</h1>
+        <p>Digitale Übersicht aller Präparate</p>
+    </header>
 
-    <input
-        type="text"
-        id="suche"
-        placeholder="Präparat suchen..."
-    >
+    <main>
+        <div class="suche">
+            <!-- WICHTIG: id="suchfeld" passend zum JS! -->
+            <input
+                type="text"
+                id="suchfeld"
+                placeholder="Präparat suchen..."
+            >
+        </div>
 
-    <div id="praeparate"></div>
+        <!-- Hier wird die Anzahl der Treffer reingeschrieben -->
+        <div id="anzahl"></div>
+
+        <!-- Hier werden die Karten gerendert -->
+        <div id="praeparate"></div>
+    </main>
 
     <script src="script.js"></script>
 
