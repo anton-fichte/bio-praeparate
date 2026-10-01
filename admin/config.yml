@@ -32,9 +32,10 @@ collections:
                   - { label: "ID", name: "id", widget: "string" }
                   - { label: "Name", name: "name", widget: "string" }
                   - { label: "Standort", name: "ort", widget: "string" }
-                  - { label: "Bild", name: "bild", widget: "image" }
                   - label: "Stichwörter/Tags"
                     name: "stichwoerter"
                     widget: "list"
                     required: false
                     default: []
+                  - { label: "Bild", name: "bild", widget: "image" }
+                  
