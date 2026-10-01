@@ -13,28 +13,31 @@
   <script>
     (function () {
       function initSearch() {
-        // 1. Suche nach dem inneren Listen-Balken, der "3 präparate" bzw. "präparate" enthält
-        const spans = Array.from(document.querySelectorAll('span, div, button'));
-        const listCounterEl = spans.find(el => {
-          const txt = el.textContent.trim().toLowerCase();
-          return (txt.includes('präparate') || txt.includes('präparat')) && 
-                 el.children.length === 0 &&
-                 !el.closest('#admin-praeparat-suche-wrapper');
-        });
+        // Findet den kleinen Titel "PRÄPARATE" direkt am grauen Kasten
+        const labels = Array.from(document.querySelectorAll('label, div, span'));
+        const praeparateLabel = labels.find(el => 
+          el.children.length === 0 && 
+          el.textContent.trim().toUpperCase() === 'PRÄPARATE' &&
+          !el.closest('#admin-praeparat-suche-wrapper')
+        );
 
-        if (!listCounterEl) return;
+        if (!praeparateLabel) return;
 
-        // 2. Den direkten Listen-Kasten ermitteln
-        const listContainer = listCounterEl.closest('[class*="ControlContainer"], [class*="FieldControl"], [class*="ListControl"]') || listCounterEl.parentElement.parentElement;
+        // Findet den grauen Hauptcontainer der Präparate-Liste
+        const listContainer = praeparateLabel.closest('[class*="ControlContainer"], [class*="FieldControl"]') || praeparateLabel.parentElement;
 
         if (listContainer && !document.getElementById('admin-praeparat-suche')) {
-          // Wrapper-Container erstellen, damit das Styling abgekapselt ist
+          // Wrapper-Container
           const wrapper = document.createElement('div');
           wrapper.id = 'admin-praeparat-suche-wrapper';
           wrapper.style.cssText = `
             width: 100%;
+            display: block;
+            clear: both;
+            position: relative;
+            z-index: 10;
             padding: 8px 0;
-            margin: 8px 0 12px 0;
+            margin: 10px 0;
             box-sizing: border-box;
           `;
 
@@ -58,32 +61,25 @@
           searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
 
-            // Findet die aufklappbaren Karten-Container in der Liste
-            const cards = listContainer.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"], [class*="ListControl"] > div');
+            // Karten innerhalb des List-Containers suchen
+            const cards = listContainer.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
 
             cards.forEach(card => {
               if (card.contains(wrapper)) return;
 
-              // Prüfen, ob es eine einzelne Karte ist
-              const isCard = card.children.length > 0;
-              if (isCard) {
-                const text = card.textContent.toLowerCase();
-                if (query === '' || text.includes(query)) {
-                  card.style.setProperty('display', '', 'important');
-                } else {
-                  card.style.setProperty('display', 'none', 'important');
-                }
+              const text = card.textContent.toLowerCase();
+              if (query === '' || text.includes(query)) {
+                card.style.setProperty('display', '', 'important');
+              } else {
+                card.style.setProperty('display', 'none', 'important');
               }
             });
           });
 
           wrapper.appendChild(searchInput);
 
-          // 3. Platzierung: Direkt UNTER der Leiste mit dem "Add präparate +"-Button einfügen
-          const targetParent = listCounterEl.closest('header, div');
-          if (targetParent && targetParent.parentNode) {
-            targetParent.parentNode.insertBefore(wrapper, targetParent.nextSibling);
-          }
+          // Direkt nach dem "PRÄPARATE"-Label im grauen Kasten platzieren
+          praeparateLabel.parentNode.insertBefore(wrapper, praeparateLabel.nextSibling);
         }
       }
 
