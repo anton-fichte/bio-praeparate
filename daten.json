@@ -27,7 +27,7 @@
     {
       "praeparat": {
         "id": "003",
-        "name": "burger",
+        "name": "Cheeseburger",
         "ort": "ofen",
         "stichwoerter": [
           "lecker",
@@ -58,6 +58,19 @@
         "name": "California Bowl",
         "ort": "Tomas Lichterfelde",
         "bild": "/bilder/img_8027.jpeg"
+      }
+    },
+    {
+      "praeparat": {
+        "stichwoerter": [
+          "Giftig",
+          "ätzend",
+          "insekt"
+        ],
+        "id": "68",
+        "name": "Ameisenkot",
+        "ort": "Lager 1",
+        "bild": "/bilder/img_1484.jpeg"
       }
     }
   ]
