@@ -1,14 +1,63 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bio-Sammlung Admin</title>
-  <!-- Netlify Identity Widget -->
+  <title>Admin-Bereich | Bio-Präparate</title>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <!-- Decap CMS Skript laden -->
+  <!-- Decap CMS Einbindung -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <!-- Eigenes Skript für die Suchleiste in der Listenansicht -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Beobachtet Änderungen im Admin-Bereich (wenn das Formular lädt)
+      const observer = new MutationObserver(() => {
+        // Sucht nach der Liste der Präparate
+        const listHeader = document.querySelector('[class*="ListControlHeader"]');
+        
+        if (listHeader && !document.getElementById("admin-praeparat-suche")) {
+          // Erstelle das Suchfeld
+          const searchInput = document.createElement("input");
+          searchInput.id = "admin-praeparat-suche";
+          searchInput.type = "text";
+          searchInput.placeholder = "🔍 Präparate filtern...";
+          searchInput.style.cssText = `
+            width: 100%;
+            padding: 8px 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+          `;
+
+          // Event beim Tippen
+          searchInput.addEventListener("input", (e) => {
+            const filterText = e.target.value.toLowerCase().trim();
+            // Holt alle Listenelemente (Karten)
+            const items = document.querySelectorAll('[class*="ListItem"]');
+
+            items.forEach(item => {
+              const text = item.textContent.toLowerCase();
+              if (text.includes(filterText)) {
+                item.style.display = "";
+              } else {
+                item.style.display = "none";
+              }
+            });
+          });
+
+          // Suchfeld direkt über der Liste einfügen
+          listHeader.parentNode.insertBefore(searchInput, listHeader.nextSibling);
+        }
+      });
+
+      // Observer starten
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  </script>
 </body>
 </html>
