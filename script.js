@@ -15,7 +15,8 @@ fetch("./daten.json")
     .then(daten => {
         console.log("Daten geladen:", daten);
 
-        praeparate = daten;
+        // HIER GEÄNDERT: Greift auf die neue Struktur daten.praeparate zu
+        praeparate = daten.praeparate || [];
         anzeigen();
     })
     .catch(error => {
