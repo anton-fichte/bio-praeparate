@@ -1,28 +1,12 @@
 {
   "praeparate": [
     {
-      "id": "001",
-      "name": "Zwiebelhaut",
-      "ort": "Schrank 2, Kasten 4",
-      "stichwoerter": [
-        "Zelle",
-        "Pflanze",
-        "Zellwand",
-        "Zellkern"
-      ],
-      "bild": "bilder/001.jpg"
-    },
-    {
-      "id": "002",
-      "name": "Mundschleimhaut",
-      "ort": "Schrank 2, Kasten 5",
-      "stichwoerter": [
-        "Zelle",
-        "Tier",
-        "Epithel",
-        "Mensch"
-      ],
-      "bild": "bilder/002.jpg"
+      "praeparat": {
+        "id": "003",
+        "name": "abc",
+        "ort": "abc",
+        "bild": "bilder/screenshot-2026-03-11-124644.png"
+      }
     }
   ]
 }
