@@ -15,7 +15,7 @@ collections:
         fields:
           - label: "Präparate"
             name: "praeparate"
-            widget: "list"
+            widget: "searchable-list"
             # Zusammenfassung: Zeigt ID, Name und Ort direkt in den Kacheln an
             summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}}) ({{fields.praeparat.stichwoerter}})'
             fields:
