@@ -13,22 +13,31 @@
   <script>
     (function () {
       function initSearch() {
-        // Findet alle Elemente, die den Text "präparate" (Groß/Kleinschreibung egal) enthalten
-        const allElements = Array.from(document.querySelectorAll('div, span, label, header'));
-        
-        // Findet den Hauptbalken "PRÄPARATE"
-        const headerEl = allElements.find(el => {
+        // 1. Suche nach dem inneren Listen-Balken, der "3 präparate" bzw. "präparate" enthält
+        const spans = Array.from(document.querySelectorAll('span, div, button'));
+        const listCounterEl = spans.find(el => {
           const txt = el.textContent.trim().toLowerCase();
-          return (txt === 'präparate' || txt.includes('präparate')) && el.children.length === 0;
+          return (txt.includes('präparate') || txt.includes('präparat')) && 
+                 el.children.length === 0 &&
+                 !el.closest('#admin-praeparat-suche-wrapper');
         });
 
-        if (!headerEl) return;
+        if (!listCounterEl) return;
 
-        // Sucht den äußeren Karten-Container
-        const container = headerEl.closest('[class*="ControlContainer"], [class*="FieldControl"], [class*="WidgetFolder"]') || headerEl.parentElement.parentElement;
+        // 2. Den direkten Listen-Kasten ermitteln
+        const listContainer = listCounterEl.closest('[class*="ControlContainer"], [class*="FieldControl"], [class*="ListControl"]') || listCounterEl.parentElement.parentElement;
 
-        if (container && !document.getElementById('admin-praeparat-suche')) {
-          // Erstellt die Suchleiste
+        if (listContainer && !document.getElementById('admin-praeparat-suche')) {
+          // Wrapper-Container erstellen, damit das Styling abgekapselt ist
+          const wrapper = document.createElement('div');
+          wrapper.id = 'admin-praeparat-suche-wrapper';
+          wrapper.style.cssText = `
+            width: 100%;
+            padding: 8px 0;
+            margin: 8px 0 12px 0;
+            box-sizing: border-box;
+          `;
+
           const searchInput = document.createElement('input');
           searchInput.id = 'admin-praeparat-suche';
           searchInput.type = 'text';
@@ -36,27 +45,26 @@
           searchInput.style.cssText = `
             width: 100%;
             padding: 10px 14px;
-            margin: 12px 0;
             border: 2px solid #2563eb;
             border-radius: 8px;
             font-size: 15px;
             box-sizing: border-box;
             outline: none;
             background-color: #ffffff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
           `;
 
-          // Filter-Funktion für die grauen Karten
+          // Filter-Logik für die einzelnen Karten
           searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
 
-            // Findet die einzelnen verschachtelten Präparate-Karten
-            const cards = container.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"], [class*="ListControl"] > div > div');
+            // Findet die aufklappbaren Karten-Container in der Liste
+            const cards = listContainer.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"], [class*="ListControl"] > div');
 
             cards.forEach(card => {
-              if (card.contains(searchInput)) return;
+              if (card.contains(wrapper)) return;
 
-              // Prüft, ob es eine einzelne Präparate-Karte ist
+              // Prüfen, ob es eine einzelne Karte ist
               const isCard = card.children.length > 0;
               if (isCard) {
                 const text = card.textContent.toLowerCase();
@@ -69,13 +77,17 @@
             });
           });
 
-          // Platziert das Suchfeld direkt über der Liste
-          headerEl.parentElement.insertBefore(searchInput, headerEl.nextSibling);
+          wrapper.appendChild(searchInput);
+
+          // 3. Platzierung: Direkt UNTER der Leiste mit dem "Add präparate +"-Button einfügen
+          const targetParent = listCounterEl.closest('header, div');
+          if (targetParent && targetParent.parentNode) {
+            targetParent.parentNode.insertBefore(wrapper, targetParent.nextSibling);
+          }
         }
       }
 
-      // Prüft fortlaufend, ob das Formular gerendert wurde
-      setInterval(initSearch, 300);
+      setInterval(initSearch, 400);
     })();
   </script>
 </body>
