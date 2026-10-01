@@ -11,10 +11,9 @@
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
   <script>
-    // Suchleiste sicher in die Liste einfügen
     (function () {
       function attachSearch() {
-        // Sucht den Header der Präparate-Liste anhand des Texteintrags "Präparate" oder "PRÄPARATE"
+        // Sucht die Überschrift "Präparate"
         const elements = Array.from(document.querySelectorAll('label, h2, span, div'));
         const listHeader = elements.find(el => 
           el.children.length === 0 && 
@@ -42,29 +41,36 @@
               box-shadow: 0 2px 4px rgba(0,0,0,0.08);
             `;
 
-            // Live-Filterung beim Tippen
+            // Live-Filterung
             searchInput.addEventListener('input', (e) => {
               const query = e.target.value.toLowerCase().trim();
-              const items = container.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
 
-              items.forEach(item => {
-                const text = item.textContent.toLowerCase();
+              // Alle direkten Kinder-Blöcke (die einzelnen grauen Karten der Liste) ermitteln
+              const listWrapper = container.querySelector('ul, [class*="List"], [class*="ControlContainer"]') || container;
+              const cards = Array.from(listWrapper.children).filter(child => !child.contains(searchInput));
+
+              cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                
                 if (query === '') {
-                  item.style.display = '';
+                  card.style.display = '';
                 } else {
-                  item.style.display = text.includes(query) ? '' : 'none';
+                  if (text.includes(query)) {
+                    card.style.display = '';
+                  } else {
+                    card.style.display = 'none';
+                  }
                 }
               });
             });
 
-            // Fügt das Suchfeld direkt unter der Überschrift ein
+            // Fügt das Suchfeld unter der Überschrift ein
             listHeader.parentNode.insertBefore(searchInput, listHeader.nextSibling);
           }
         }
       }
 
-      // Prüfe alle 500ms, ob das Formular gerendert wurde
-      setInterval(attachSearch, 500);
+      setInterval(attachSearch, 400);
     })();
   </script>
 </body>
