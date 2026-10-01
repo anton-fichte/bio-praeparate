@@ -1,7 +1,8 @@
 backend:
   name: git-gateway
-  branch: main # oder master
+  branch: main # oder master, je nach Repository
 
+# Bilder-Ordner im Repository und auf der Website
 media_folder: "bilder"
 public_folder: "/bilder"
 
@@ -15,7 +16,7 @@ collections:
         fields:
           - label: "Präparate"
             name: "praeparate"
-            widget: "searchable-list"
+            widget: "list"
             summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}})'
             fields:
               - label: "Präparat"
