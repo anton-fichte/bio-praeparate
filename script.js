@@ -7,34 +7,24 @@ const anzahl = document.getElementById("anzahl");
 
 // Daten aus daten.json laden
 
+// Daten aus daten.json laden und CMS-Struktur glätten
 fetch("./daten.json")
-    .then(response => {
-        console.log("Status:", response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(daten => {
-        console.log("Daten geladen:", daten);
+        // Prüfen, ob die Daten aus der 'praeparate'-Liste kommen
+        const rohdaten = daten.praeparate || [];
 
-        // HIER GEÄNDERT: Greift auf die neue Struktur daten.praeparate zu
-        praeparate = daten.praeparate || [];
+        // Falls Decap CMS ein 'praeparat'-Unterobjekt angelegt hat, entpacken wir es hier
+        praeparate = rohdaten.map(eintrag => {
+            return eintrag.praeparat ? eintrag.praeparat : eintrag;
+        });
+
+        // Jetzt ruft er deine ganz normale anzeigen()-Funktion auf
         anzeigen();
     })
     .catch(error => {
-        console.error("Fehler:", error);
-
-        container.innerHTML = `
-            <div class="keine-ergebnisse">
-                <h2>Fehler beim Laden</h2>
-                <p>
-                    Die Präparate-Daten konnten nicht geladen werden.
-                </p>
-                <p>
-                    Fehler: ${error.message}
-                </p>
-            </div>
-        `;
+        console.error("Fehler beim Laden der Präparate:", error);
     });
-
 
 // Präparate anzeigen
 
