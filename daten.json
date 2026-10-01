@@ -2,10 +2,14 @@
   "praeparate": [
     {
       "praeparat": {
-        "id": "003",
-        "name": "abc",
-        "ort": "abc",
-        "bild": "bilder/screenshot-2026-03-11-124644.png"
+        "id": "001",
+        "name": "Blume",
+        "ort": "Kasten 4 Schrank 5",
+        "stichwoerter": [
+          "Pflanze",
+          "Zelle"
+        ],
+        "bild": "bilder/img_8028.jpeg"
       }
     }
   ]
