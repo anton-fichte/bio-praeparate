@@ -35,6 +35,18 @@
         ],
         "bild": "bilder/burger-rezept-5.jpg"
       }
+    },
+    {
+      "praeparat": {
+        "stichwoerter": [
+          "mehl",
+          "hefe"
+        ],
+        "id": "005",
+        "name": "pizza",
+        "ort": "italien",
+        "bild": "/bilder/8d83d9ed4567fa15456d8eec7557e60006a15576.avif"
+      }
     }
   ]
 }
