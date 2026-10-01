@@ -1,28 +1,29 @@
 backend:
   name: git-gateway
-  branch: main # oder master, je nach deinem Repository
+  branch: main # oder master, je nachdem wie dein Branch heißt
 
-media_folder: "images" # Pfad zu den Bildern
+media_folder: "images"
 public_folder: "/images"
 
 collections:
-  - name: "praeparate_collection"
+  - name: "praeparate_sammlung"
     label: "Präparate"
+    # Suchfelder direkt für diese Collection aktivieren
+    search_fields:
+      - "praeparat.name"
+      - "praeparat.ort"
+      - "praeparat.id"
+      - "praeparat.stichwoerter"
     files:
       - file: "daten.json"
-        label: "Präparate Liste"
-        name: "praeparate_file"
+        label: "Präparate verwalten"
+        name: "praeparate_datei"
         fields:
-          - label: "Präparate"
+          - label: "Alle Präparate"
             name: "praeparate"
             widget: "list"
-            # PUNKT 1: Suchfelder und Anzeige-Name definieren
-            summary: '{{fields.praeparat.name}} ({{fields.praeparat.ort}})'
-            search_fields:
-              - "praeparat.name"
-              - "praeparat.ort"
-              - "praeparat.stichwoerter"
-              - "praeparat.id"
+            # Zeigt Name und Ort direkt in der Listen-Übersicht an
+            summary: '{{fields.praeparat.name}} — 📍 {{fields.praeparat.ort}}'
             fields:
               - label: "Präparat"
                 name: "praeparat"
@@ -32,7 +33,6 @@ collections:
                   - { label: "Name", name: "name", widget: "string" }
                   - { label: "Standort", name: "ort", widget: "string" }
                   - { label: "Bild", name: "bild", widget: "image" }
-                  # PUNKT 2: default: [] verhindert das "null"
                   - label: "Stichwörter/Tags"
                     name: "stichwoerter"
                     widget: "list"
