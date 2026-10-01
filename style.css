@@ -26,25 +26,25 @@ header p {
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
 }
 
 .admin-button {
-  background-color: #2c3e50;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease;
+    background-color: #2c3e50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
 }
 
 .admin-button:hover {
-  background-color: #34495e;
+    background-color: #34495e;
 }
 
 
@@ -66,14 +66,10 @@ main {
 #suchfeld {
     width: 100%;
     box-sizing: border-box;
-
     padding: 15px;
-
     font-size: 18px;
-
     border: 1px solid #ccc;
     border-radius: 10px;
-
     outline: none;
 }
 
@@ -94,10 +90,7 @@ main {
 
 #praeparate {
     display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(280px, 1fr));
-
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
 }
 
@@ -106,37 +99,26 @@ main {
 
 .praeparat {
     background: white;
-
     border-radius: 12px;
-
     padding: 20px;
-
-    box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.1);
-
-    transition:
-        transform 0.15s,
-        box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .praeparat:hover {
     transform: translateY(-3px);
-
-    box-shadow:
-        0 5px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 
-/* Bild */
+/* Galerie-Bild (einheitliches Querformat) */
 
 .praeparat img {
     width: 100%;
     height: 200px;
-
     object-fit: cover;
-
     border-radius: 8px;
-
     display: block;
 }
 
@@ -168,15 +150,10 @@ main {
 
 .tag {
     display: inline-block;
-
     background: #e5e7eb;
-
     border-radius: 20px;
-
     padding: 4px 9px;
-
     margin: 3px 3px 3px 0;
-
     font-size: 13px;
 }
 
@@ -185,58 +162,61 @@ main {
 
 .keine-ergebnisse {
     background: white;
-
     padding: 30px;
-
     border-radius: 12px;
-
     text-align: center;
-
     color: #666;
 }
 
+
 /* Modal Popup Styling */
+
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .modal.hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .modal-content {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 90%;
-  position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 550px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .modal-close {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  font-size: 1.8rem;
-  cursor: pointer;
-  color: #666;
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #666;
 }
 
-.praeparat {
-  cursor: pointer;
-  transition: transform 0.15s ease;
-}
+/* Bild im Detail-Modal (Native Proportionen für Hoch- & Querformat) */
 
-.praeparat:hover {
-  transform: translateY(-3px);
+.modal-bild {
+    width: auto;
+    max-width: 100%;
+    max-height: 60vh;
+    display: block;
+    margin: 15px auto;
+    border-radius: 8px;
+    object-fit: contain;
 }
