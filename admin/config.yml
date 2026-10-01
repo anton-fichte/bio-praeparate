@@ -1,25 +1,29 @@
 backend:
   name: git-gateway
-  branch: main # Oder 'master', falls dein Branch so heißt
+  branch: main # Falls dein Branch auf GitHub 'master' heißt, ändere 'main' hier zu 'master'
 
 media_folder: "bilder"
 public_folder: "bilder"
 
 collections:
-  - name: "praeparate"
-    label: "Präparate-Sammlung"
+  - name: "praeparate_collection"
+    label: "Bio-Präparate"
     files:
       - file: "daten.json"
-        label: "Alle Präparate"
-        name: "praeparate_liste"
+        label: "Präparate Liste"
+        name: "daten_datei"
         fields:
-          - label: "Präparate"
+          - label: "Alle Präparate"
             name: "praeparate"
             widget: "list"
             summary: "{{fields.name}} (ID: {{fields.id}})"
-            fields:
-              - { label: "ID (z. B. 003)", name: "id", widget: "string" }
-              - { label: "Name des Präparats", name: "name", widget: "string" }
-              - { label: "Standort / Aufbewahrung", name: "ort", widget: "string" }
-              - { label: "Stichwörter / Tags", name: "stichwoerter", widget: "list" }
-              - { label: "Bild auswählen/hochladen", name: "bild", widget: "image" }
+            field:
+              label: "Präparat"
+              name: "praeparat"
+              widget: "object"
+              fields:
+                - { label: "ID (z. B. 003)", name: "id", widget: "string" }
+                - { label: "Name des Präparats", name: "name", widget: "string" }
+                - { label: "Standort / Aufbewahrung", name: "ort", widget: "string" }
+                - { label: "Stichwörter / Tags", name: "stichwoerter", widget: "list" }
+                - { label: "Bild auswählen/hochladen", name: "bild", widget: "image" }
