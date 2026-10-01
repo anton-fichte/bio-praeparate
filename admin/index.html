@@ -4,10 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bio-Sammlung Admin</title>
-  <!-- Netlify Identity Widget für den Login -->
+  <!-- Netlify Identity Widget -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
+  <script>
+    // Netlify-URL explizit festlegen, da die Seite über Cloudflare/andere Domain aufgerufen wird
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+      // Verbindet das Widget direkt mit Netlify:
+      window.netlifyIdentity.init({
+        APIUrl: "https://https://majestic-zuccutto-3245b4.netlify.app/.netlify/identity"
+      });
+    
+  </script>
+
   <!-- Decap CMS Skript laden -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
