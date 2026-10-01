@@ -7,57 +7,68 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <!-- Decap CMS Einbindung -->
+  <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
-  <!-- Eigenes Skript für die Suchleiste in der Listenansicht -->
+  <!-- Robuste Suchleisten-Injektion -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Beobachtet Änderungen im Admin-Bereich (wenn das Formular lädt)
-      const observer = new MutationObserver(() => {
-        // Sucht nach der Liste der Präparate
-        const listHeader = document.querySelector('[class*="ListControlHeader"]');
-        
-        if (listHeader && !document.getElementById("admin-praeparat-suche")) {
-          // Erstelle das Suchfeld
-          const searchInput = document.createElement("input");
-          searchInput.id = "admin-praeparat-suche";
-          searchInput.type = "text";
-          searchInput.placeholder = "🔍 Präparate filtern...";
-          searchInput.style.cssText = `
-            width: 100%;
-            padding: 8px 12px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-            box-sizing: border-box;
-          `;
+    (function () {
+      function initSearch() {
+        // Findet den Kasten "PRÄPARATE"
+        const listHeaders = Array.from(document.querySelectorAll('div, header, span'))
+          .filter(el => el.children.length === 0 && el.textContent.trim().toUpperCase() === 'PRÄPARATE');
 
-          // Event beim Tippen
-          searchInput.addEventListener("input", (e) => {
-            const filterText = e.target.value.toLowerCase().trim();
-            // Holt alle Listenelemente (Karten)
-            const items = document.querySelectorAll('[class*="ListItem"]');
+        if (listHeaders.length > 0) {
+          const headerEl = listHeaders[0].closest('[class*="ControlContainer"], [class*="FieldControl"], div');
 
-            items.forEach(item => {
-              const text = item.textContent.toLowerCase();
-              if (text.includes(filterText)) {
-                item.style.display = "";
-              } else {
-                item.style.display = "none";
-              }
+          if (headerEl && !document.getElementById("admin-praeparat-suche")) {
+            const searchContainer = document.createElement("div");
+            searchContainer.style.cssText = "padding: 10px 0; margin-bottom: 10px;";
+
+            const searchInput = document.createElement("input");
+            searchInput.id = "admin-praeparat-suche";
+            searchInput.type = "text";
+            searchInput.placeholder = "🔍 Präparate durchsuchen...";
+            searchInput.style.cssText = `
+              width: 100%;
+              padding: 10px 14px;
+              border: 2px solid #2563eb;
+              border-radius: 8px;
+              font-size: 15px;
+              box-sizing: border-box;
+              outline: none;
+              box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            `;
+
+            searchInput.addEventListener("input", (e) => {
+              const filterText = e.target.value.toLowerCase().trim();
+              // Alle aufklappbaren/einzelnen Listen-Blöcke ermitteln
+              const items = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+
+              items.forEach(item => {
+                // Verhindert das Ausblenden des übergeordneten Containers
+                if (item.contains(searchInput)) return;
+
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filterText)) {
+                  item.style.display = "";
+                } else {
+                  item.style.display = "none";
+                }
+              });
             });
-          });
 
-          // Suchfeld direkt über der Liste einfügen
-          listHeader.parentNode.insertBefore(searchInput, listHeader.nextSibling);
+            searchContainer.appendChild(searchInput);
+            
+            // Fügt die Suchleiste direkt unter dem "PRÄPARATE"-Titel ein
+            headerEl.insertBefore(searchContainer, headerEl.children[1] || null);
+          }
         }
-      });
+      }
 
-      // Observer starten
-      observer.observe(document.body, { childList: true, subtree: true });
-    });
+      // Prüft alle 800ms, ob das Formular geladen ist
+      setInterval(initSearch, 800);
+    })();
   </script>
 </body>
 </html>
