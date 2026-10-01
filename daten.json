@@ -16,61 +16,12 @@
       "praeparat": {
         "id": "002",
         "bild": "bilder/002.jpg",
-        "name": "mundschleimhaut",
-        "ort": "keine ahnung",
+        "name": "Mundschleimhaut",
+        "ort": "Kasten 42 Schrank 9",
         "stichwoerter": [
-          "mensch",
-          "zelle"
+          "Mensch",
+          "Zelle"
         ]
-      }
-    },
-    {
-      "praeparat": {
-        "id": "003",
-        "name": "Cheeseburger",
-        "ort": "ofen",
-        "stichwoerter": [
-          "lecker",
-          "bacon"
-        ],
-        "bild": "bilder/burger-rezept-5.jpg"
-      }
-    },
-    {
-      "praeparat": {
-        "stichwoerter": [
-          "mehl",
-          "hefe"
-        ],
-        "id": "005",
-        "name": "pizza",
-        "ort": "italien",
-        "bild": "/bilder/8d83d9ed4567fa15456d8eec7557e60006a15576.avif"
-      }
-    },
-    {
-      "praeparat": {
-        "stichwoerter": [
-          "Me",
-          "23"
-        ],
-        "id": "007",
-        "name": "California Bowl",
-        "ort": "Tomas Lichterfelde",
-        "bild": "/bilder/img_8027.jpeg"
-      }
-    },
-    {
-      "praeparat": {
-        "stichwoerter": [
-          "Giftig",
-          "ätzend",
-          "insekt"
-        ],
-        "id": "68",
-        "name": "Ameisenkot",
-        "ort": "Lager 1",
-        "bild": "/bilder/img_1484.jpeg"
       }
     }
   ]
