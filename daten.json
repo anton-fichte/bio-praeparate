@@ -6,7 +6,8 @@
         "name": "Blume",
         "ort": "Kasten 4 Schrank 5",
         "stichwoerter": [
-          "Pflanze"
+          "Pflanze",
+          "Orchidee"
         ],
         "bild": "bilder/001.jpg"
       }
@@ -22,6 +23,18 @@
           "cool"
         ],
         "bild": "bilder/airbus_a320-214-_airbus_industrie_jp7617615.jpg"
+      }
+    },
+    {
+      "praeparat": {
+        "id": "42_81",
+        "name": "Burger",
+        "ort": "Ofen",
+        "stichwoerter": [
+          "bacon",
+          "käse"
+        ],
+        "bild": "bilder/burger-rezept-5.jpg"
       }
     }
   ]
