@@ -1,31 +1,40 @@
 backend:
   name: git-gateway
-  branch: main
+  branch: main # oder master, je nach deinem Repository
 
-media_folder: "bilder"
-public_folder: "bilder"
+media_folder: "images" # Pfad zu den Bildern
+public_folder: "/images"
 
 collections:
   - name: "praeparate_collection"
-    label: "Bio-Präparate"
+    label: "Präparate"
     files:
       - file: "daten.json"
         label: "Präparate Liste"
-        name: "daten_datei"
+        name: "praeparate_file"
         fields:
-          - label: "Alle Präparate"
+          - label: "Präparate"
             name: "praeparate"
             widget: "list"
-            # HIER ERGÄNZT: Aktiviert die gezielte Suche in den Listenelementen
-            search_fields: ["name", "ort", "id", "stichwoerter"]
-            summary: "{{fields.name}} (ID: {{fields.id}})"
-            field:
-              label: "Präparat"
-              name: "praeparat"
-              widget: "object"
-              fields:
-                - { label: "ID (z. B. 003)", name: "id", widget: "string" }
-                - { label: "Name des Präparats", name: "name", widget: "string" }
-                - { label: "Standort / Aufbewahrung", name: "ort", widget: "string" }
-                - { label: "Stichwörter / Tags", name: "stichwoerter", widget: "list" }
-                - { label: "Bild auswählen/hochladen", name: "bild", widget: "image" }
+            # PUNKT 1: Suchfelder und Anzeige-Name definieren
+            summary: '{{fields.praeparat.name}} ({{fields.praeparat.ort}})'
+            search_fields:
+              - "praeparat.name"
+              - "praeparat.ort"
+              - "praeparat.stichwoerter"
+              - "praeparat.id"
+            fields:
+              - label: "Präparat"
+                name: "praeparat"
+                widget: "object"
+                fields:
+                  - { label: "ID", name: "id", widget: "string" }
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Standort", name: "ort", widget: "string" }
+                  - { label: "Bild", name: "bild", widget: "image" }
+                  # PUNKT 2: default: [] verhindert das "null"
+                  - label: "Stichwörter/Tags"
+                    name: "stichwoerter"
+                    widget: "list"
+                    required: false
+                    default: []
