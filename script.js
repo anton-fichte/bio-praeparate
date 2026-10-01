@@ -7,29 +7,28 @@ const anzahl = document.getElementById("anzahl");
 
 // Daten aus daten.json laden
 
-fetch("daten.json")
+fetch("./daten.json")
     .then(response => {
-        if (!response.ok) {
-            throw new Error("daten.json konnte nicht geladen werden.");
-        }
-
+        console.log("Status:", response.status);
         return response.json();
     })
-
     .then(daten => {
-        praeparate = daten;
+        console.log("Daten geladen:", daten);
 
+        praeparate = daten;
         anzeigen();
     })
-
     .catch(error => {
-        console.error(error);
+        console.error("Fehler:", error);
 
         container.innerHTML = `
             <div class="keine-ergebnisse">
                 <h2>Fehler beim Laden</h2>
                 <p>
                     Die Präparate-Daten konnten nicht geladen werden.
+                </p>
+                <p>
+                    Fehler: ${error.message}
                 </p>
             </div>
         `;
