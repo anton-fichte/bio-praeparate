@@ -7,12 +7,17 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
+  <!-- React explizit laden, damit das Custom Widget funktioniert -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/create-react-class@15.7.0/create-react-class.min.js"></script>
+
   <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
   <script>
-    // Eigenes Widget mit eingebautem Suchfeld für Listen
-    const SearchableListControl = createClass({
+    // Custom Widget mit Suchleiste
+    const SearchableListControl = createReactClass({
       getInitialState: function() {
         return { query: '' };
       },
@@ -23,11 +28,11 @@
         const listControl = CMS.getWidget('list').control;
         const query = this.state.query;
 
-        // Rendert das Standard-List-Widget von Decap CMS
+        // Standard Decap List-Widget rendern
         const originalList = React.createElement(listControl, this.props);
 
-        // Suchfeld-Element
-        const searchBox = React.createElement('div', { style: { marginBottom: '12px' } },
+        // Suchfeld erstellen
+        const searchBox = React.createElement('div', { style: { marginBottom: '15px' } },
           React.createElement('input', {
             type: 'text',
             placeholder: '🔍 Präparate durchsuchen...',
@@ -45,28 +50,25 @@
           })
         );
 
-        // Filtert die Listenelemente im DOM basierend auf der Eingabe
-        if (query) {
-          setTimeout(() => {
-            const items = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
-            items.forEach(item => {
-              if (item.id === 'search-container') return;
-              const text = item.textContent.toLowerCase();
+        // Einträge filtern
+        setTimeout(() => {
+          const items = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+          items.forEach(item => {
+            if (item.id === 'search-container') return;
+            const text = item.textContent.toLowerCase();
+            if (query) {
               item.style.display = text.includes(query) ? '' : 'none';
-            });
-          }, 50);
-        } else {
-          setTimeout(() => {
-            const items = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
-            items.forEach(item => item.style.display = '');
-          }, 50);
-        }
+            } else {
+              item.style.display = '';
+            }
+          });
+        }, 50);
 
         return React.createElement('div', { id: 'search-container' }, searchBox, originalList);
       }
     });
 
-    // Registriert das Custom Widget im CMS
+    // Widget im CMS registrieren
     CMS.registerWidget('searchable-list', SearchableListControl);
   </script>
 </body>
