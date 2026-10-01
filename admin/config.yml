@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: main # oder master, je nach Repository
+  branch: main # oder master
 
 media_folder: "images"
 public_folder: "/images"
@@ -16,8 +16,8 @@ collections:
           - label: "Präparate"
             name: "praeparate"
             widget: "list"
-            # WICHTIG: Zeigt Name & Ort im Admin-Kasten an, damit das Suchfeld beides durchsuchen kann!
-            summary: '{{fields.praeparat.name}} ({{fields.praeparat.ort}})'
+            # Zusammenfassung: Zeigt ID, Name und Ort direkt in den Kacheln an
+            summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}}) ({{fields.praeparat.stichwoerter}})'
             fields:
               - label: "Präparat"
                 name: "praeparat"
@@ -26,9 +26,9 @@ collections:
                   - { label: "ID", name: "id", widget: "string" }
                   - { label: "Name", name: "name", widget: "string" }
                   - { label: "Standort", name: "ort", widget: "string" }
+                  - { label: "Bild", name: "bild", widget: "image", required: false }
                   - label: "Stichwörter/Tags"
                     name: "stichwoerter"
                     widget: "list"
                     required: false
                     default: []
-                  - { label: "Bild", name: "bild", widget: "image", required: false }
