@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: main # Falls dein Branch auf GitHub 'master' heißt, ändere 'main' hier zu 'master'
+  branch: main
 
 media_folder: "bilder"
 public_folder: "bilder"
@@ -16,6 +16,8 @@ collections:
           - label: "Alle Präparate"
             name: "praeparate"
             widget: "list"
+            # HIER ERGÄNZT: Aktiviert die gezielte Suche in den Listenelementen
+            search_fields: ["name", "ort", "id", "stichwoerter"]
             summary: "{{fields.name}} (ID: {{fields.id}})"
             field:
               label: "Präparat"
