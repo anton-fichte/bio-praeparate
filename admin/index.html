@@ -10,65 +10,64 @@
   <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
-  <!-- Robuste Suchleisten-Injektion -->
   <script>
-    (function () {
-      function initSearch() {
-        // Findet den Kasten "PRÄPARATE"
-        const listHeaders = Array.from(document.querySelectorAll('div, header, span'))
-          .filter(el => el.children.length === 0 && el.textContent.trim().toUpperCase() === 'PRÄPARATE');
+    // Eigenes Widget mit eingebautem Suchfeld für Listen
+    const SearchableListControl = createClass({
+      getInitialState: function() {
+        return { query: '' };
+      },
+      handleSearchChange: function(e) {
+        this.setState({ query: e.target.value.toLowerCase() });
+      },
+      render: function() {
+        const listControl = CMS.getWidget('list').control;
+        const query = this.state.query;
 
-        if (listHeaders.length > 0) {
-          const headerEl = listHeaders[0].closest('[class*="ControlContainer"], [class*="FieldControl"], div');
+        // Rendert das Standard-List-Widget von Decap CMS
+        const originalList = React.createElement(listControl, this.props);
 
-          if (headerEl && !document.getElementById("admin-praeparat-suche")) {
-            const searchContainer = document.createElement("div");
-            searchContainer.style.cssText = "padding: 10px 0; margin-bottom: 10px;";
+        // Suchfeld-Element
+        const searchBox = React.createElement('div', { style: { marginBottom: '12px' } },
+          React.createElement('input', {
+            type: 'text',
+            placeholder: '🔍 Präparate durchsuchen...',
+            value: this.state.query,
+            onChange: this.handleSearchChange,
+            style: {
+              width: '100%',
+              padding: '10px 14px',
+              border: '2px solid #2563eb',
+              borderRadius: '8px',
+              fontSize: '15px',
+              boxSizing: 'border-box',
+              outline: 'none'
+            }
+          })
+        );
 
-            const searchInput = document.createElement("input");
-            searchInput.id = "admin-praeparat-suche";
-            searchInput.type = "text";
-            searchInput.placeholder = "🔍 Präparate durchsuchen...";
-            searchInput.style.cssText = `
-              width: 100%;
-              padding: 10px 14px;
-              border: 2px solid #2563eb;
-              border-radius: 8px;
-              font-size: 15px;
-              box-sizing: border-box;
-              outline: none;
-              box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            `;
-
-            searchInput.addEventListener("input", (e) => {
-              const filterText = e.target.value.toLowerCase().trim();
-              // Alle aufklappbaren/einzelnen Listen-Blöcke ermitteln
-              const items = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
-
-              items.forEach(item => {
-                // Verhindert das Ausblenden des übergeordneten Containers
-                if (item.contains(searchInput)) return;
-
-                const text = item.textContent.toLowerCase();
-                if (text.includes(filterText)) {
-                  item.style.display = "";
-                } else {
-                  item.style.display = "none";
-                }
-              });
+        // Filtert die Listenelemente im DOM basierend auf der Eingabe
+        if (query) {
+          setTimeout(() => {
+            const items = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+            items.forEach(item => {
+              if (item.id === 'search-container') return;
+              const text = item.textContent.toLowerCase();
+              item.style.display = text.includes(query) ? '' : 'none';
             });
-
-            searchContainer.appendChild(searchInput);
-            
-            // Fügt die Suchleiste direkt unter dem "PRÄPARATE"-Titel ein
-            headerEl.insertBefore(searchContainer, headerEl.children[1] || null);
-          }
+          }, 50);
+        } else {
+          setTimeout(() => {
+            const items = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+            items.forEach(item => item.style.display = '');
+          }, 50);
         }
-      }
 
-      // Prüft alle 800ms, ob das Formular geladen ist
-      setInterval(initSearch, 800);
-    })();
+        return React.createElement('div', { id: 'search-container' }, searchBox, originalList);
+      }
+    });
+
+    // Registriert das Custom Widget im CMS
+    CMS.registerWidget('searchable-list', SearchableListControl);
   </script>
 </body>
 </html>
