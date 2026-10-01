@@ -16,13 +16,12 @@
     </header>
 
     <header class="header">
-      <!-- Neuer Admin-Button -->
+      <!-- Admin-Button -->
       <a href="/admin/" class="admin-button">⚙️ Admin-Bereich</a>
     </header>
 
     <main>
         <div class="suche">
-            <!-- WICHTIG: id="suchfeld" passend zum JS! -->
             <input
                 type="text"
                 id="suchfeld"
@@ -30,15 +29,19 @@
             >
         </div>
 
-        <!-- Hier wird die Anzahl der Treffer reingeschrieben -->
         <div id="anzahl"></div>
-
-        <!-- Hier werden die Karten gerendert -->
         <div id="praeparate"></div>
     </main>
 
-    <script src="script.js"></script>
+    <!-- Detail-Modal Popup (MUSS vor script.js stehen) -->
+    <div id="detail-modal" class="modal hidden">
+      <div class="modal-content">
+        <span id="modal-close" class="modal-close">&times;</span>
+        <div id="modal-body"></div>
+      </div>
+    </div>
 
+    <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
       if (window.netlifyIdentity) {
@@ -52,13 +55,7 @@
       }
     </script>
 
-    <!-- Detail-Modal Popup -->
-    <div id="detail-modal" class="modal hidden">
-      <div class="modal-content">
-        <span id="modal-close" class="modal-close">&times;</span>
-        <div id="modal-body"></div>
-      </div>
-    </div>
-    
+    <!-- Haupt-Script als Letztes laden -->
+    <script src="script.js"></script>
 </body>
 </html>
