@@ -1,19 +1,19 @@
 backend:
   name: git-gateway
-  branch: main # HINWEIS: Falls dein Haupt-Branch auf GitHub 'master' heißt, ändere 'main' zu 'master'!
+  branch: main # Oder 'master', falls dein Branch so heißt
 
 media_folder: "bilder"
 public_folder: "bilder"
 
 collections:
-  - name: "praeparate_sammlung"
-    label: "Präparate-Verwaltung"
+  - name: "praeparate"
+    label: "Präparate-Sammlung"
     files:
       - file: "daten.json"
         label: "Alle Präparate"
-        name: "praeparate_datei"
+        name: "praeparate_liste"
         fields:
-          - label: "Präparate-Liste"
+          - label: "Präparate"
             name: "praeparate"
             widget: "list"
             summary: "{{fields.name}} (ID: {{fields.id}})"
