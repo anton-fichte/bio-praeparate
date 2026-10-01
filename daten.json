@@ -10,6 +10,19 @@
         ],
         "bild": "bilder/001.jpg"
       }
+    },
+    {
+      "praeparat": {
+        "id": "0028453092374",
+        "name": "A320",
+        "ort": "Vorfeld 4 Halle 2",
+        "stichwoerter": [
+          "flugzeug",
+          "airbus",
+          "cool"
+        ],
+        "bild": "bilder/airbus_a320-214-_airbus_industrie_jp7617615.jpg"
+      }
     }
   ]
 }
