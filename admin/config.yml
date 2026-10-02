@@ -20,8 +20,12 @@ collections:
             widget: "list"
             summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}})'
             fields:
-              - { label: "ID", name: "id", widget: "string" }
-              - { label: "Name", name: "name", widget: "string" }
-              - { label: "Standort", name: "ort", widget: "string" }
-              - { label: "Stichwörter/Tags", name: "stichwoerter", widget: "list", required: false, default: [] }
-              - { label: "Bild", name: "bild", widget: "image", required: false }
+              - label: "Präparat"
+                name: "praeparat"
+                widget: "object"
+                fields:
+                  - { label: "ID", name: "id", widget: "string" }
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Standort", name: "ort", widget: "string" }
+                  - { label: "Stichwörter/Tags", name: "stichwoerter", widget: "list", required: false, default: [] }
+                  - { label: "Bild", name: "bild", widget: "image", required: false }
