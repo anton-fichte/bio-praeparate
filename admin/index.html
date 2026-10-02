@@ -4,81 +4,50 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin-Bereich | Bio-Präparate</title>
-  <!-- Erzwingt das Laden der config.yml -->
-  <link href="config.yml" type="text/yaml" rel="cms-config" />
 </head>
 <body>
-  <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-  <!-- Suchleiste -->
   <script>
-    (function () {
-      function initSearch() {
-        const labels = Array.from(document.querySelectorAll('label, div, span'));
-        const praeparateLabel = labels.find(el => 
-          el.children.length === 0 && 
-          el.textContent.trim().toUpperCase() === 'PRÄPARATE' &&
-          !el.closest('#admin-praeparat-suche-wrapper')
-        );
-
-        if (!praeparateLabel) return;
-
-        const listContainer = praeparateLabel.closest('[class*="ControlContainer"], [class*="FieldControl"]') || praeparateLabel.parentElement;
-
-        if (listContainer && !document.getElementById('admin-praeparat-suche')) {
-          const wrapper = document.createElement('div');
-          wrapper.id = 'admin-praeparat-suche-wrapper';
-          wrapper.style.cssText = `
-            width: 100%;
-            display: block;
-            clear: both;
-            position: relative;
-            z-index: 10;
-            padding: 8px 0;
-            margin: 10px 0;
-            box-sizing: border-box;
-          `;
-
-          const searchInput = document.createElement('input');
-          searchInput.id = 'admin-praeparat-suche';
-          searchInput.type = 'text';
-          searchInput.placeholder = '🔍 Präparate durchsuchen...';
-          searchInput.style.cssText = `
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #2563eb;
-            border-radius: 8px;
-            font-size: 15px;
-            box-sizing: border-box;
-            outline: none;
-            background-color: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-          `;
-
-          searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            const cards = listContainer.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
-
-            cards.forEach(card => {
-              if (card.contains(wrapper)) return;
-
-              const text = card.textContent.toLowerCase();
-              if (query === '' || text.includes(query)) {
-                card.style.setProperty('display', '', 'important');
-              } else {
-                card.style.setProperty('display', 'none', 'important');
+    CMS.init({
+      config: {
+        backend: {
+          name: 'github',
+          repo: 'anton-fichte/bio-praeparate',
+          branch: 'main',
+          auth_type: 'implicit'
+        },
+        media_folder: 'bilder',
+        public_folder: '/bilder',
+        collections: [
+          {
+            name: 'praeparate_collection',
+            label: 'Präparate',
+            files: [
+              {
+                file: 'daten.json',
+                label: 'Präparate Liste',
+                name: 'praeparate_file',
+                fields: [
+                  {
+                    label: 'Präparate',
+                    name: 'praeparate',
+                    widget: 'list',
+                    summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}})',
+                    fields: [
+                      { label: 'ID', name: 'id', widget: 'string' },
+                      { label: 'Name', name: 'name', widget: 'string' },
+                      { label: 'Standort', name: 'ort', widget: 'string' },
+                      { label: 'Stichwörter/Tags', name: 'stichwoerter', widget: 'list', required: false, default: [] },
+                      { label: 'Bild', name: 'bild', widget: 'image', required: false }
+                    ]
+                  }
+                ]
               }
-            });
-          });
-
-          wrapper.appendChild(searchInput);
-          praeparateLabel.parentNode.insertBefore(wrapper, praeparateLabel.nextSibling);
-        }
+            ]
+          }
+        ]
       }
-
-      setInterval(initSearch, 400);
-    })();
+    });
   </script>
 </body>
 </html>
