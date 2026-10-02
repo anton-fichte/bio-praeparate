@@ -12,6 +12,34 @@
     .login-box input:focus { border-color: #2563eb; }
     .login-box button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
     .login-box button:hover { background: #1d4ed8; }
+
+    /* Styling für die schwebende Suchleiste oben rechts */
+    #admin-search-wrapper {
+      position: fixed;
+      top: 12px;
+      right: 20px;
+      z-index: 999999;
+      width: 300px;
+      max-width: calc(100vw - 40px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+    #admin-search-input {
+      width: 100%;
+      padding: 9px 14px;
+      border: 2px solid #2563eb;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline: none;
+      background: #ffffff;
+      color: #1f2937;
+    }
+    #admin-search-input:focus {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
   </style>
 </head>
 <body>
@@ -36,16 +64,76 @@
         e.preventDefault();
         const pass = document.getElementById('password-input').value.trim();
         if (pass) {
-          // Inkludiert alle nötigen Felder für Decap CMS
           localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: pass, backendName: 'github' }));
           location.reload();
         }
       });
     } else {
-      // Wenn bereits eingeloggt, Decap CMS direkt laden
+      // Wenn bereits eingeloggt, Decap CMS laden
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
       document.body.appendChild(script);
+
+      // Sichere Suchleiste starten, sobald das CMS geladen ist
+      script.onload = function() {
+        initSafeSearch();
+      };
+    }
+
+    function initSafeSearch() {
+      let filterQuery = '';
+
+      function updateSearchUI() {
+        // Prüfen, ob Listen-Karten im DOM vorhanden sind
+        const cards = Array.from(document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]'));
+        const isListView = cards.length > 0;
+        let searchWrapper = document.getElementById('admin-search-wrapper');
+
+        if (isListView) {
+          if (!searchWrapper) {
+            searchWrapper = document.createElement('div');
+            searchWrapper.id = 'admin-search-wrapper';
+
+            const input = document.createElement('input');
+            input.id = 'admin-search-input';
+            input.type = 'text';
+            input.placeholder = '🔍 Präparate durchsuchen...';
+            input.value = filterQuery;
+
+            input.addEventListener('input', (e) => {
+              filterQuery = e.target.value.toLowerCase().trim();
+              applyFilter();
+            });
+
+            searchWrapper.appendChild(input);
+            // WICHTIG: Direkt an document.body anhängen, damit React nicht gestört wird!
+            document.body.appendChild(searchWrapper);
+          }
+          applyFilter();
+        } else {
+          // In der Einzelansicht/beim Bearbeiten die Suchleiste ausblenden
+          if (searchWrapper) {
+            searchWrapper.remove();
+          }
+        }
+      }
+
+      function applyFilter() {
+        const cards = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+        cards.forEach(card => {
+          if (card.id === 'admin-search-wrapper' || card.contains(document.getElementById('admin-search-wrapper'))) return;
+
+          const text = card.textContent.toLowerCase();
+          if (filterQuery === '' || text.includes(filterQuery)) {
+            card.style.setProperty('display', '', 'important');
+          } else {
+            card.style.setProperty('display', 'none', 'important');
+          }
+        });
+      }
+
+      // Prüft dynamisch alle 500ms, ob wir in der Liste sind
+      setInterval(updateSearchUI, 500);
     }
   </script>
 </body>
