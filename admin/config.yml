@@ -2,8 +2,8 @@ backend:
   name: github
   repo: anton-fichte/bio-praeparate
   branch: main
-  # Das hier fängt den Login-Button ab und leitet ihn zu Cloudflare statt zu Netlify:
-  base_url: https://decap-password-auth.anton-stuetzle.workers.dev
+  api_root: https://decap-password-auth.anton-stuetzle.workers.dev/api/v3
+  auth_type: implicit
 
 media_folder: "bilder"
 public_folder: "/bilder"
