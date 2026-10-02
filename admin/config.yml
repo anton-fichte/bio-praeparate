@@ -1,9 +1,8 @@
 backend:
   name: github
-  repo: anton-fichte/bio-praeparate
+  repo: anton-fichte/bio-praeparate  # Deinen genauen Repo-Pfad eintragen
   branch: main
-  api_root: https://decap-password-auth.anton-stuetzle.workers.dev/api/v3
-  site_id: bio-praeparate.pages.dev
+  auth_type: implicit
 
 media_folder: "bilder"
 public_folder: "/bilder"
