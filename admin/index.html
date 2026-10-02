@@ -6,57 +6,12 @@
   <title>Admin-Bereich | Bio-Präparate</title>
 </head>
 <body>
-  <!-- Decap CMS automatische Initialisierung stoppen -->
-  <script>
-    window.CMS_MANUAL_INIT = true;
-  </script>
-
-  <!-- Decap CMS Script -->
+  <!-- Decap CMS Script laden -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
-  <!-- CMS Konfiguration initialisieren -->
+  <!-- CMS manuell aus der config.yml starten -->
   <script>
-    CMS.init({
-      config: {
-        backend: {
-          name: 'github',
-          repo: 'anton-fichte/bio-praeparate',
-          branch: 'main',
-          api_root: 'https://decap-password-auth.anton-stuetzle.workers.dev/api/v3',
-          use_graphql: false
-        },
-        media_folder: 'bilder',
-        public_folder: '/bilder',
-        collections: [
-          {
-            name: 'praeparate_collection',
-            label: 'Präparate',
-            files: [
-              {
-                file: 'daten.json',
-                label: 'Präparate Liste',
-                name: 'praeparate_file',
-                fields: [
-                  {
-                    label: 'Präparate',
-                    name: 'praeparate',
-                    widget: 'list',
-                    summary: '{{fields.praeparat.id}} - {{fields.praeparat.name}} ({{fields.praeparat.ort}})',
-                    fields: [
-                      { label: 'ID', name: 'id', widget: 'string' },
-                      { label: 'Name', name: 'name', widget: 'string' },
-                      { label: 'Standort', name: 'ort', widget: 'string' },
-                      { label: 'Stichwörter/Tags', name: 'stichwoerter', widget: 'list', required: false, default: [] },
-                      { label: 'Bild', name: 'bild', widget: 'image', required: false }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    });
+    CMS.init();
   </script>
 
   <!-- Suchleiste -->
