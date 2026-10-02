@@ -4,16 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin-Bereich | Bio-Präparate</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
   <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
+  <!-- Suchleiste -->
   <script>
     (function () {
       function initSearch() {
-        // Findet den kleinen Titel "PRÄPARATE" direkt am grauen Kasten
         const labels = Array.from(document.querySelectorAll('label, div, span'));
         const praeparateLabel = labels.find(el => 
           el.children.length === 0 && 
@@ -23,11 +22,9 @@
 
         if (!praeparateLabel) return;
 
-        // Findet den grauen Hauptcontainer der Präparate-Liste
         const listContainer = praeparateLabel.closest('[class*="ControlContainer"], [class*="FieldControl"]') || praeparateLabel.parentElement;
 
         if (listContainer && !document.getElementById('admin-praeparat-suche')) {
-          // Wrapper-Container
           const wrapper = document.createElement('div');
           wrapper.id = 'admin-praeparat-suche-wrapper';
           wrapper.style.cssText = `
@@ -57,11 +54,8 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.08);
           `;
 
-          // Filter-Logik für die einzelnen Karten
           searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
-
-            // Karten innerhalb des List-Containers suchen
             const cards = listContainer.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
 
             cards.forEach(card => {
@@ -77,8 +71,6 @@
           });
 
           wrapper.appendChild(searchInput);
-
-          // Direkt nach dem "PRÄPARATE"-Label im grauen Kasten platzieren
           praeparateLabel.parentNode.insertBefore(wrapper, praeparateLabel.nextSibling);
         }
       }
