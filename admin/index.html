@@ -6,7 +6,15 @@
   <title>Admin-Bereich | Bio-Präparate</title>
 </head>
 <body>
+  <!-- 1. Automatisches Laden deaktivieren -->
+  <script>
+    window.CMS_MANUAL_INIT = true;
+  </script>
+
+  <!-- 2. Decap CMS Script laden -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <!-- 3. Konfiguration manuell und einmalig übergeben -->
   <script>
     CMS.init({
       config: {
@@ -48,6 +56,76 @@
         ]
       }
     });
+  </script>
+
+  <!-- 4. Deine funktionierende Suchleiste -->
+  <script>
+    (function () {
+      function initSearch() {
+        const labels = Array.from(document.querySelectorAll('label, div, span'));
+        const praeparateLabel = labels.find(el => 
+          el.children.length === 0 && 
+          el.textContent.trim().toUpperCase() === 'PRÄPARATE' &&
+          !el.closest('#admin-praeparat-suche-wrapper')
+        );
+
+        if (!praeparateLabel) return;
+
+        const listContainer = praeparateLabel.closest('[class*="ControlContainer"], [class*="FieldControl"]') || praeparateLabel.parentElement;
+
+        if (listContainer && !document.getElementById('admin-praeparat-suche')) {
+          const wrapper = document.createElement('div');
+          wrapper.id = 'admin-praeparat-suche-wrapper';
+          wrapper.style.cssText = `
+            width: 100%;
+            display: block;
+            clear: both;
+            position: relative;
+            z-index: 10;
+            padding: 8px 0;
+            margin: 10px 0;
+            box-sizing: border-box;
+          `;
+
+          const searchInput = document.createElement('input');
+          searchInput.id = 'admin-praeparat-suche';
+          searchInput.type = 'text';
+          searchInput.placeholder = '🔍 Präparate durchsuchen...';
+          searchInput.style.cssText = `
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+          `;
+
+          searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const cards = listContainer.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+
+            cards.forEach(card => {
+              if (card.contains(wrapper)) return;
+
+              const text = card.textContent.toLowerCase();
+              if (query === '' || text.includes(query)) {
+                card.style.setProperty('display', '', 'important');
+              } else {
+                card.style.setProperty('display', 'none', 'important');
+              }
+            });
+          });
+
+          wrapper.appendChild(searchInput);
+          praeparateLabel.parentNode.insertBefore(wrapper, praeparateLabel.nextSibling);
+        }
+      }
+
+      setInterval(initSearch, 400);
+    })();
   </script>
 </body>
 </html>
