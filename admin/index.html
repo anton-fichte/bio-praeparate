@@ -6,15 +6,15 @@
   <title>Admin-Bereich | Bio-Präparate</title>
 </head>
 <body>
-  <!-- 1. Automatisches Laden deaktivieren -->
+  <!-- Decap CMS automatische Initialisierung stoppen -->
   <script>
     window.CMS_MANUAL_INIT = true;
   </script>
 
-  <!-- 2. Decap CMS Script laden -->
+  <!-- Decap CMS Script -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
-  <!-- 3. Konfiguration manuell und einmalig übergeben -->
+  <!-- CMS Konfiguration initialisieren -->
   <script>
     CMS.init({
       config: {
@@ -22,7 +22,8 @@
           name: 'github',
           repo: 'anton-fichte/bio-praeparate',
           branch: 'main',
-          auth_type: 'implicit'
+          api_root: 'https://decap-password-auth.anton-stuetzle.workers.dev/api/v3',
+          use_graphql: false
         },
         media_folder: 'bilder',
         public_folder: '/bilder',
@@ -58,7 +59,7 @@
     });
   </script>
 
-  <!-- 4. Deine funktionierende Suchleiste -->
+  <!-- Suchleiste -->
   <script>
     (function () {
       function initSearch() {
