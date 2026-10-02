@@ -3,7 +3,7 @@ backend:
   repo: anton-fichte/bio-praeparate
   branch: main
   api_root: https://decap-password-auth.anton-stuetzle.workers.dev/api/v3
-  use_graphql: false
+  site_id: bio-praeparate.pages.dev
 
 media_folder: "bilder"
 public_folder: "/bilder"
