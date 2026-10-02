@@ -1,8 +1,10 @@
 backend:
-  name: git-gateway
-  branch: main # oder master, je nach Repository
+  name: github
+  repo: DEIN_GITHUB_USERNAME/DEIN_REPOSITORY_NAME # z.B. max/bio-sammlung
+  branch: main # oder master
+  api_root: https://decap-password-auth.<dein-username>.workers.dev/api/v3 # URL aus Schritt 2
 
-# Bilder-Ordner im Repository und auf der Website
+# Bilder-Ordner
 media_folder: "bilder"
 public_folder: "/bilder"
 
