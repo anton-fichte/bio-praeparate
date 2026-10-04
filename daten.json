@@ -3,11 +3,10 @@
     {
       "praeparat": {
         "id": "001",
-        "name": "Blume",
+        "name": "Zwiebelhaut",
         "ort": "Kasten 4 Schrank 6",
         "stichwoerter": [
-          "Pflanze",
-          "Orchidee"
+          "Pflanze"
         ],
         "bild": "bilder/001.jpg"
       }
