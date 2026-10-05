@@ -13,7 +13,7 @@
     .login-box button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
     .login-box button:hover { background: #1d4ed8; }
 
-    /* Suchleiste unten rechts */
+    /* Suchleiste unten rechts als schwebendes Widget */
     #admin-search-wrapper {
       position: fixed;
       bottom: 24px;
@@ -41,26 +41,6 @@
     #admin-search-input:focus {
       border-color: #1d4ed8;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-    }
-
-    /* Abmelden-Button unten links */
-    #admin-logout-btn {
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      z-index: 999999;
-      padding: 10px 16px;
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-    }
-    #admin-logout-btn:hover {
-      background: #dc2626;
     }
   </style>
 </head>
@@ -96,17 +76,7 @@
       script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
       document.body.appendChild(script);
 
-      // Logout-Button unten links einblenden
-      const logoutBtn = document.createElement('button');
-      logoutBtn.id = 'admin-logout-btn';
-      logoutBtn.innerHTML = '🚪 Abmelden';
-      logoutBtn.onclick = () => {
-        localStorage.removeItem('decap-cms-user');
-        location.reload();
-      };
-      document.body.appendChild(logoutBtn);
-
-      // Suchleiste starten, sobald CMS bereit ist
+      // Sichere Suchleiste starten, sobald das CMS geladen ist
       script.onload = function() {
         initSafeSearch();
       };
@@ -116,6 +86,7 @@
       let filterQuery = '';
 
       function updateSearchUI() {
+        // Prüfen, ob Listen-Karten im DOM vorhanden sind
         const cards = Array.from(document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]'));
         const isListView = cards.length > 0;
         let searchWrapper = document.getElementById('admin-search-wrapper');
@@ -141,6 +112,7 @@
           }
           applyFilter();
         } else {
+          // Ausblenden, wenn keine Liste vorhanden ist
           if (searchWrapper) {
             searchWrapper.remove();
           }
@@ -161,6 +133,7 @@
         });
       }
 
+      // Prüft dynamisch alle 500ms, ob wir in der Liste sind
       setInterval(updateSearchUI, 500);
     }
   </script>
