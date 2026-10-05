@@ -154,6 +154,27 @@
       // Prüft dynamisch alle 500ms, ob wir in der Liste sind
       setInterval(updateSearchUI, 500);
     }
+
+      } else {
+      // Wenn bereits eingeloggt, Decap CMS laden
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+      document.body.appendChild(script);
+
+      // Logout-Button unten links einblenden
+      const logoutBtn = document.createElement('button');
+      logoutBtn.id = 'admin-logout-btn';
+      logoutBtn.innerHTML = '🚪 Abmelden';
+      logoutBtn.onclick = () => {
+      localStorage.removeItem('decap-cms-user');
+      location.reload();
+      };
+      document.body.appendChild(logoutBtn);
+
+      script.onload = function() {
+        initSafeSearch();
+      };
+    }
   </script>
 </body>
 </html>
