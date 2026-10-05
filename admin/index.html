@@ -65,7 +65,7 @@
   </style>
 </head>
 <body>
-  <!-- Eigene Passwort-Maske -->
+  <!-- Anmelde-Maske -->
   <div id="login-container" class="login-box" style="display: none;">
     <h2>Bio-Präparate Admin</h2>
     <p style="color: #6b7280; font-size: 14px;">Bitte Passwort eingeben:</p>
@@ -91,28 +91,28 @@
         }
       });
     } else {
-      // Wenn bereits eingeloggt, Decap CMS laden
+      // Wenn eingeloggt, Decap CMS laden
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
       document.body.appendChild(script);
 
-      // Logout-Button unten links einblenden
+      // Logout-Button unten links
       const logoutBtn = document.createElement('button');
       logoutBtn.id = 'admin-logout-btn';
       logoutBtn.innerHTML = '🚪 Abmelden';
       logoutBtn.onclick = () => {
-        localStorage.removeItem('decap-cms-user');
+        localStorage.removeItem(STORAGE_KEY);
         location.reload();
       };
       document.body.appendChild(logoutBtn);
 
-      // Suchleiste starten, sobald CMS bereit ist
+      // Suchleiste initialisieren sobald Skript geladen ist
       script.onload = function() {
         initSafeSearch();
       };
     }
 
-    // Suchleiste initialisieren
+    // Suchleiste unten rechts
     function initSafeSearch() {
       let filterQuery = '';
 
