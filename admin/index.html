@@ -13,7 +13,6 @@
     .login-box button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
     .login-box button:hover { background: #1d4ed8; }
 
-    /* Suchleiste unten rechts */
     #admin-search-wrapper {
       position: fixed;
       bottom: 24px;
@@ -43,7 +42,6 @@
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
 
-    /* Abmelden-Button unten links */
     #admin-logout-btn {
       position: fixed;
       bottom: 24px;
@@ -59,13 +57,10 @@
       cursor: pointer;
       box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     }
-    #admin-logout-btn:hover {
-      background: #dc2626;
-    }
+    #admin-logout-btn:hover { background: #dc2626; }
   </style>
 </head>
 <body>
-  <!-- Anmelde-Maske -->
   <div id="login-container" class="login-box" style="display: none;">
     <h2>Bio-Präparate Admin</h2>
     <p style="color: #6b7280; font-size: 14px;">Bitte Passwort eingeben:</p>
@@ -77,26 +72,52 @@
 
   <script>
     const STORAGE_KEY = 'decap-cms-user';
+    // TRAGE HIER DEINE WORKER-URL EIN:
+    const WORKER_URL = 'https://decap-password-auth.anton-stuetzle.workers.dev/';
 
-    // Wenn kein Login hinterlegt ist, Passwort-Formular anzeigen
+    // Automatische Absicherung: Falls invalide Daten im Speicher liegen, aufräumen
+    try {
+      const storedData = localStorage.getItem(STORAGE_KEY);
+      if (storedData) {
+        const parsed = JSON.parse(storedData);
+        if (!parsed.token || !parsed.token.startsWith('ghp_')) {
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+    } catch(e) {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
     if (!localStorage.getItem(STORAGE_KEY)) {
       document.getElementById('login-container').style.display = 'block';
       
-      document.getElementById('login-form').addEventListener('submit', (e) => {
+      document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const pass = document.getElementById('password-input').value.trim();
-        if (pass) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: pass, backendName: 'github' }));
-          location.reload();
+        
+        try {
+          const res = await fetch(`${WORKER_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pass })
+          });
+          const data = await res.json();
+
+          if (res.ok && data.token) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: data.token, backendName: 'github' }));
+            location.reload();
+          } else {
+            alert(data.error || 'Ungültiges Passwort');
+          }
+        } catch (err) {
+          alert('Verbindungsfehler zum Cloudflare Worker.');
         }
       });
     } else {
-      // Wenn eingeloggt, Decap CMS laden
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
       document.body.appendChild(script);
 
-      // Logout-Button unten links
       const logoutBtn = document.createElement('button');
       logoutBtn.id = 'admin-logout-btn';
       logoutBtn.innerHTML = '🚪 Abmelden';
@@ -106,13 +127,11 @@
       };
       document.body.appendChild(logoutBtn);
 
-      // Suchleiste initialisieren sobald Skript geladen ist
       script.onload = function() {
         initSafeSearch();
       };
     }
 
-    // Suchleiste unten rechts
     function initSafeSearch() {
       let filterQuery = '';
 
