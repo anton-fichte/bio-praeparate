@@ -66,7 +66,7 @@
         e.preventDefault();
         const pass = document.getElementById('password-input').value.trim();
         if (pass) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: pass, backendName: 'github' }));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: pass, backendName: 'github', login: 'admin', email: 'admin@example.com' }));
           location.reload();
         }
       });
