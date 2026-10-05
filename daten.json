@@ -1,40 +1,23 @@
 {
   "praeparate": [
     {
-      "praeparat": {
-        "id": "001",
-        "name": "Zwiebelhaut",
-        "ort": "Kasten 4 Schrank 7",
-        "stichwoerter": [
-          "Pflanze"
-        ],
-        "bild": "bilder/001.jpg"
-      }
+      "id": "001",
+      "name": "Zwiebelhaut",
+      "ort": "Kasten 4 Schrank 7",
+      "stichwoerter": [
+        "Pflanze"
+      ],
+      "bild": "bilder/001.jpg"
     },
     {
-      "praeparat": {
-        "id": "002",
-        "bild": "bilder/002.jpg",
-        "name": "Mundschleimhaut",
-        "ort": "Kasten 42 Schrank 9",
-        "stichwoerter": [
-          "Mensch",
-          "Zelle"
-        ]
-      }
-    },
-    {
-      "praeparat": {
-        "stichwoerter": [
-          "wenig_MB",
-          "test",
-          "gemini"
-        ],
-        "id": "003",
-        "name": "Komprimieren Test",
-        "ort": "Komprimierung",
-        "bild": {}
-      }
+      "id": "002",
+      "name": "Mundschleimhaut",
+      "ort": "Kasten 42 Schrank 9",
+      "stichwoerter": [
+        "Mensch",
+        "Zelle"
+      ],
+      "bild": "bilder/002.jpg"
     }
   ]
 }
