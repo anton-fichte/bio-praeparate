@@ -22,6 +22,19 @@
           "Zelle"
         ]
       }
+    },
+    {
+      "praeparat": {
+        "stichwoerter": [
+          "wenig_MB",
+          "test",
+          "gemini"
+        ],
+        "id": "003",
+        "name": "Komprimieren Test",
+        "ort": "Komprimierung",
+        "bild": {}
+      }
     }
   ]
 }
