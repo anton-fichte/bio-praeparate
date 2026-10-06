@@ -227,36 +227,34 @@
       });
     }
 
-    // Live-Check: Exakt NUR echte ID-Eingabefelder überprüfen
+    // Live-Check: Strikte Zuordnung AUSSCHLIESSLICH zu ID-Eingabefeldern
     document.addEventListener('focusout', checkLiveDuplicates);
     document.addEventListener('input', checkLiveDuplicates);
 
     function checkLiveDuplicates() {
       const allInputs = Array.from(document.querySelectorAll('input'));
 
-      // Präziser Filter: Strikter Check auf data-field-name="id" oder direkt zugehöriges ID-Label
+      // Filtert EXAKTES ID-Eingabefeld
       const idInputs = allInputs.filter(input => {
         if (input.id === 'admin-search-input' || input.id === 'password-input') return false;
 
-        let parent = input.parentElement;
-        for (let i = 0; i < 4 && parent; i++) {
-          const fieldName = (parent.getAttribute('data-field-name') || '').toLowerCase();
-          
-          // Wenn ein data-field-name vorhanden ist, MUSS es exakt "id" sein
-          if (fieldName) {
-            return fieldName === 'id';
-          }
+        // Finde den spezifischen Feld-Container von Decap (ControlContainer)
+        const controlPane = input.closest('[class*="ControlContainer"], [data-field-name]');
+        if (!controlPane) return false;
 
-          // Nur matchen, wenn ein direkt im Container befindliches Label exakt "id" heißt
-          const label = parent.querySelector('label');
-          if (label) {
-            const labelText = label.textContent.trim().toLowerCase();
-            if (labelText === 'id' || labelText === 'id:') {
-              return true;
-            }
-          }
-          parent = parent.parentElement;
+        // 1. Check data-field-name Attribut
+        const fieldName = (controlPane.getAttribute('data-field-name') || '').toLowerCase();
+        if (fieldName) {
+          return fieldName === 'id';
         }
+
+        // 2. Falls kein Attribut vorhanden: Prüfe das DIRECT in diesem Container liegende Label
+        const label = controlPane.querySelector('label');
+        if (label) {
+          const labelText = label.textContent.trim().toLowerCase();
+          return labelText === 'id' || labelText === 'id:';
+        }
+
         return false;
       });
 
@@ -290,7 +288,7 @@
         }
       });
 
-      // Speicher-Sperre nur bei doppelten IDs aktivieren
+      // Speicher-Sperre nur bei doppelten IDs
       window.__hasDuplicateIds = hasDuplicates;
       const publishBtns = document.querySelectorAll('button[class*="PublishButton"], button[data-testid="publish-button"]');
       publishBtns.forEach(btn => {
@@ -304,7 +302,7 @@
       });
     }
 
-    // Abfangen von Klicks in der Capture-Phase (Sicherheitsnetz)
+    // Abfangen von Klicks in der Capture-Phase
     document.addEventListener('click', function(e) {
       if (window.__hasDuplicateIds) {
         const btn = e.target.closest('button[class*="PublishButton"], button[data-testid="publish-button"]');
