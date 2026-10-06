@@ -18,6 +18,12 @@
         "Zelle"
       ],
       "bild": "bilder/002.jpg"
+    },
+    {
+      "stichwoerter": [],
+      "id": "001",
+      "name": "Zwie",
+      "ort": "adf"
     }
   ]
 }
