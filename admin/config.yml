@@ -8,20 +8,17 @@ media_folder: "bilder"
 public_folder: "/bilder"
 
 collections:
-  - name: "praeparate_collection"
+  - name: "praeparate"
     label: "Präparate"
-    files:
-      - file: "daten.json"
-        label: "Präparate Liste"
-        name: "praeparate_file"
-        fields:
-          - label: "Präparate"
-            name: "praeparate"
-            widget: "list"
-            summary: '{{fields.id}} - {{fields.name}} ({{fields.ort}})'
-            fields:
-              - { label: "ID", name: "id", widget: "string" }
-              - { label: "Name", name: "name", widget: "string" }
-              - { label: "Standort", name: "ort", widget: "string" }
-              - { label: "Stichwörter/Tags", name: "stichwoerter", widget: "list", required: false, default: [] }
-              - { label: "Bild", name: "bild", widget: "image", required: false}
+    folder: "praeparate" # Ordner im Repo, in dem die einzelnen JSON-Dateien gespeichert werden
+    create: true
+    slug: "{{id}}" # Der Dateiname entspricht der ID (z.B. praeparate/101.json)
+    extension: "json"
+    format: "json"
+    summary: '{{id}} - {{name}} ({{ort}})'
+    fields:
+      - { label: "ID", name: "id", widget: "string", pattern: ['^[a-zA-Z0-9_-]+$', 'Die ID darf nur Buchstaben (ohne Umlaute), Zahlen, Bindestriche und Unterstriche enthalten!'] }
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Standort", name: "ort", widget: "string" }
+      - { label: "Stichwörter/Tags", name: "stichwoerter", widget: "list", required: false, default: [] }
+      - { label: "Bild", name: "bild", widget: "image", required: false }
