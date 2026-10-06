@@ -18,46 +18,6 @@
         "Zelle"
       ],
       "bild": "bilder/002.jpg"
-    },
-    {
-      "stichwoerter": [
-        "max.500kb",
-        "test"
-      ],
-      "id": "003",
-      "name": "test image size",
-      "ort": "hinfort",
-      "bild": "/bilder/nik-mqgktlxqfcy-unsplash.jpg"
-    },
-    {
-      "stichwoerter": [],
-      "id": "004",
-      "name": "a",
-      "ort": "a"
-    },
-    {
-      "stichwoerter": [],
-      "id": "005",
-      "name": "a",
-      "ort": "a"
-    },
-    {
-      "stichwoerter": [],
-      "id": "006",
-      "name": "a",
-      "ort": "a"
-    },
-    {
-      "stichwoerter": [],
-      "id": "007",
-      "name": "a",
-      "ort": "a"
-    },
-    {
-      "stichwoerter": [],
-      "id": "008",
-      "name": "a",
-      "ort": "a"
     }
   ]
 }
