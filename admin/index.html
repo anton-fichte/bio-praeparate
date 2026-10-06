@@ -95,7 +95,7 @@
 
       script.onload = function() {
         initSafeSearch();
-        initDuplicateCheck(); // CMS-Event-Listener bei Skript-Laden aktivieren!
+        initDuplicateCheck();
       };
     }
 
@@ -227,25 +227,33 @@
       });
     }
 
-    // 1. Live-Check: Exakt NUR nach echten ID-Feldern suchen
+    // Live-Check: Exakt NUR echte ID-Eingabefelder überprüfen
     document.addEventListener('focusout', checkLiveDuplicates);
     document.addEventListener('input', checkLiveDuplicates);
 
     function checkLiveDuplicates() {
       const allInputs = Array.from(document.querySelectorAll('input'));
 
-      // Präziser ID-Feld-Filter (verhindert False-Positives bei Name, Standort etc.)
+      // Präziser Filter: Strikter Check auf data-field-name="id" oder direkt zugehöriges ID-Label
       const idInputs = allInputs.filter(input => {
+        if (input.id === 'admin-search-input' || input.id === 'password-input') return false;
+
         let parent = input.parentElement;
         for (let i = 0; i < 4 && parent; i++) {
-          const controlName = (parent.getAttribute('data-field-name') || '').toLowerCase();
-          if (controlName === 'id') return true;
+          const fieldName = (parent.getAttribute('data-field-name') || '').toLowerCase();
+          
+          // Wenn ein data-field-name vorhanden ist, MUSS es exakt "id" sein
+          if (fieldName) {
+            return fieldName === 'id';
+          }
 
+          // Nur matchen, wenn ein direkt im Container befindliches Label exakt "id" heißt
           const label = parent.querySelector('label');
           if (label) {
             const labelText = label.textContent.trim().toLowerCase();
-            // Nur matchen, wenn das Label strikt "id" oder "id:" lautet
-            if (labelText === 'id' || labelText === 'id:') return true;
+            if (labelText === 'id' || labelText === 'id:') {
+              return true;
+            }
           }
           parent = parent.parentElement;
         }
@@ -282,13 +290,13 @@
         }
       });
 
-      // Absolute Klick-Sperre auf Publish-Buttons legen
+      // Speicher-Sperre nur bei doppelten IDs aktivieren
       window.__hasDuplicateIds = hasDuplicates;
       const publishBtns = document.querySelectorAll('button[class*="PublishButton"], button[data-testid="publish-button"]');
       publishBtns.forEach(btn => {
         if (hasDuplicates) {
           btn.style.opacity = '0.4';
-          btn.style.pointerEvents = 'none'; // Verhindert Klicks vollständig
+          btn.style.pointerEvents = 'none';
         } else {
           btn.style.opacity = '1';
           btn.style.pointerEvents = 'auto';
@@ -308,7 +316,7 @@
       }
     }, true);
 
-    // 2. CMS preSave Event registrieren
+    // CMS preSave Event registrieren
     function initDuplicateCheck() {
       if (window.CMS) {
         window.CMS.registerEventListener({
