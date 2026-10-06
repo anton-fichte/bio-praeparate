@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -15,7 +18,6 @@ jobs:
           shopt -s nullglob
           files=(praeparate/*.json)
           if [ ${#files[@]} -gt 0 ]; then
-            # 'jq' ist ein Tool, das JSONs automatisch zu einem sauberen Array verbindet
             jq -s '.' "${files[@]}" > daten.json
           else
             echo "[]" > daten.json
@@ -27,9 +29,7 @@ jobs:
           git config --global user.email "action@github.com"
           git add daten.json
           
-          # Nur speichern, wenn sich wirklich was geändert hat
           git diff --quiet && git diff --staged --quiet || git commit -m "Auto-generiere daten.json"
           
-          # Neu laden, falls in der Zwischenzeit jemand anderes etwas gespeichert hat, dann pushen
           git pull --rebase origin main
           git push
