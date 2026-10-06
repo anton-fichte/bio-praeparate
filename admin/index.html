@@ -12,49 +12,6 @@
     .login-box input:focus { border-color: #2563eb; }
     .login-box button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
     .login-box button:hover { background: #1d4ed8; }
-
-    /* Suchleiste unten rechts als schwebendes Widget */
-    #admin-search-wrapper {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 999999;
-      width: 320px;
-      max-width: calc(100vw - 48px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      background: #ffffff;
-      padding: 6px;
-      border: 1px solid #e5e7eb;
-    }
-    #admin-search-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 2px solid #2563eb;
-      border-radius: 8px;
-      font-size: 14px;
-      box-sizing: border-box;
-      outline: none;
-      background: #ffffff;
-      color: #1f2937;
-    }
-    #admin-search-input:focus {
-      border-color: #1d4ed8;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-    }
-
-    /* Eigene ID-Duplikat-Warnung gezielt gestalten */
-    .id-duplicate-warning {
-      color: #991b1b;
-      background-color: #fef2f2;
-      border: 1px solid #fca5a5;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-weight: 600;
-      margin-top: 8px;
-      display: block;
-      font-size: 13px;
-    }
   </style>
 </head>
 <body>
@@ -62,7 +19,6 @@
     Abmelden
   </button>
 
-  <!-- Eigene Passwort-Maske -->
   <div id="login-container" class="login-box" style="display: none;">
     <h2>Bio-Präparate Admin</h2>
     <p style="color: #6b7280; font-size: 14px;">Bitte Passwort eingeben:</p>
@@ -92,63 +48,6 @@
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
       document.body.appendChild(script);
-
-      script.onload = function() {
-        initSafeSearch();
-        initDuplicateCheck();
-      };
-    }
-
-    function initSafeSearch() {
-      let filterQuery = '';
-
-      function updateSearchUI() {
-        const cards = Array.from(document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]'));
-        const isListView = cards.length > 0;
-        let searchWrapper = document.getElementById('admin-search-wrapper');
-
-        if (isListView) {
-          if (!searchWrapper) {
-            searchWrapper = document.createElement('div');
-            searchWrapper.id = 'admin-search-wrapper';
-
-            const input = document.createElement('input');
-            input.id = 'admin-search-input';
-            input.type = 'text';
-            input.placeholder = '🔍 Präparate durchsuchen...';
-            input.value = filterQuery;
-            
-            input.addEventListener('input', (e) => {
-              filterQuery = e.target.value.toLowerCase().trim();
-              applyFilter();
-            });
-
-            searchWrapper.appendChild(input);
-            document.body.appendChild(searchWrapper);
-          }
-          applyFilter();
-        } else {
-          if (searchWrapper) {
-            searchWrapper.remove();
-          }
-        }
-      }
-
-      function applyFilter() {
-        const cards = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
-        cards.forEach(card => {
-          if (card.id === 'admin-search-wrapper' || card.contains(document.getElementById('admin-search-wrapper'))) return;
-
-          const text = card.textContent.toLowerCase();
-          if (filterQuery === '' || text.includes(filterQuery)) {
-            card.style.setProperty('display', '', 'important');
-          } else {
-            card.style.setProperty('display', 'none', 'important');
-          }
-        });
-      }
-
-      setInterval(updateSearchUI, 500);
     }
 
     function logout() {
@@ -156,7 +55,7 @@
       location.reload();
     }
 
-    // Bildkomprimierung
+    // Bildkomprimierung (bleibt als Schutz für das Repo aktiv!)
     document.addEventListener('change', function(e) {
       if (e.target && e.target.type === 'file' && e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
@@ -209,15 +108,9 @@
             ctx.drawImage(img, 0, 0, width, height);
 
             canvas.toBlob((blob) => {
-              if (!blob) {
-                reject(new Error("Canvas-Konvertierung fehlgeschlagen"));
-                return;
-              }
+              if (!blob) return reject(new Error("Canvas-Konvertierung fehlgeschlagen"));
               const cleanName = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
-              const newFile = new File([blob], cleanName, {
-                type: 'image/jpeg',
-                lastModified: Date.now()
-              });
+              const newFile = new File([blob], cleanName, { type: 'image/jpeg', lastModified: Date.now() });
               resolve(newFile);
             }, 'image/jpeg', quality);
           };
@@ -225,126 +118,6 @@
         };
         reader.onerror = reject;
       });
-    }
-
-    // Live-Check: Strikte Zuordnung AUSSCHLIESSLICH zu ID-Eingabefeldern
-    document.addEventListener('focusout', checkLiveDuplicates);
-    document.addEventListener('input', checkLiveDuplicates);
-
-    function checkLiveDuplicates() {
-      const allInputs = Array.from(document.querySelectorAll('input'));
-
-      // Filtert EXAKTES ID-Eingabefeld
-      const idInputs = allInputs.filter(input => {
-        if (input.id === 'admin-search-input' || input.id === 'password-input') return false;
-
-        // Finde den spezifischen Feld-Container von Decap (ControlContainer)
-        const controlPane = input.closest('[class*="ControlContainer"], [data-field-name]');
-        if (!controlPane) return false;
-
-        // 1. Check data-field-name Attribut
-        const fieldName = (controlPane.getAttribute('data-field-name') || '').toLowerCase();
-        if (fieldName) {
-          return fieldName === 'id';
-        }
-
-        // 2. Falls kein Attribut vorhanden: Prüfe das DIRECT in diesem Container liegende Label
-        const label = controlPane.querySelector('label');
-        if (label) {
-          const labelText = label.textContent.trim().toLowerCase();
-          return labelText === 'id' || labelText === 'id:';
-        }
-
-        return false;
-      });
-
-      const counts = {};
-      idInputs.forEach(input => {
-        const val = input.value.trim();
-        if (val) counts[val] = (counts[val] || 0) + 1;
-      });
-
-      let hasDuplicates = false;
-
-      idInputs.forEach(input => {
-        const val = input.value.trim();
-        let errorMsg = input.parentNode.querySelector('.id-duplicate-warning');
-
-        if (val && counts[val] > 1) {
-          hasDuplicates = true;
-          input.style.borderColor = '#dc2626';
-          input.style.backgroundColor = '#fef2f2';
-
-          if (!errorMsg) {
-            errorMsg = document.createElement('div');
-            errorMsg.className = 'id-duplicate-warning';
-            input.parentNode.appendChild(errorMsg);
-          }
-          errorMsg.textContent = `⚠️ Die ID "${val}" ist doppelt vergeben!`;
-        } else {
-          input.style.borderColor = '';
-          input.style.backgroundColor = '';
-          if (errorMsg) errorMsg.remove();
-        }
-      });
-
-      // Speicher-Sperre nur bei doppelten IDs
-      window.__hasDuplicateIds = hasDuplicates;
-      const publishBtns = document.querySelectorAll('button[class*="PublishButton"], button[data-testid="publish-button"]');
-      publishBtns.forEach(btn => {
-        if (hasDuplicates) {
-          btn.style.opacity = '0.4';
-          btn.style.pointerEvents = 'none';
-        } else {
-          btn.style.opacity = '1';
-          btn.style.pointerEvents = 'auto';
-        }
-      });
-    }
-
-    // Abfangen von Klicks in der Capture-Phase
-    document.addEventListener('click', function(e) {
-      if (window.__hasDuplicateIds) {
-        const btn = e.target.closest('button[class*="PublishButton"], button[data-testid="publish-button"]');
-        if (btn) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          alert('⚠️ Veröffentlichen blockiert: Es existiert mindestens eine doppelte ID im Formular!');
-        }
-      }
-    }, true);
-
-    // CMS preSave Event registrieren
-    function initDuplicateCheck() {
-      if (window.CMS) {
-        window.CMS.registerEventListener({
-          name: 'preSave',
-          handler: ({ entry }) => {
-            const data = entry.get('data').toJS();
-            const list = data.praeparate || [];
-
-            const seenIds = new Set();
-            const duplicates = new Set();
-
-            list.forEach(item => {
-              const id = item && item.id ? String(item.id).trim() : '';
-              if (id) {
-                if (seenIds.has(id)) {
-                  duplicates.add(id);
-                } else {
-                  seenIds.add(id);
-                }
-              }
-            });
-
-            if (duplicates.size > 0) {
-              const dupList = Array.from(duplicates).join(', ');
-              alert(`⚠️ Speichern abgebrochen!\n\nFolgende ID ist doppelt vergeben: "${dupList}"`);
-              throw new Error(`Speichern wegen doppelter ID blockiert: ${dupList}`);
-            }
-          }
-        });
-      }
     }
   </script>
 </body>
