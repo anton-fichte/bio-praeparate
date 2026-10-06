@@ -6,7 +6,10 @@ backend:
 
 media_folder: "bilder"
 public_folder: "/bilder"
-max_file_size: 500000 # Begrenzung auf 500.000 Bytes (~500 KB)
+
+media_library:
+  config:
+    max_file_size: 500000 # 500 KB in Bytes
 
 collections:
   - name: "praeparate_collection"
