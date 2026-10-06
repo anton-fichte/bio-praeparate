@@ -18,6 +18,16 @@
         "Zelle"
       ],
       "bild": "bilder/002.jpg"
+    },
+    {
+      "stichwoerter": [
+        "max.500kb",
+        "test"
+      ],
+      "id": "003",
+      "name": "test image size",
+      "ort": "hinfort",
+      "bild": "/bilder/nik-mqgktlxqfcy-unsplash.jpg"
     }
   ]
 }
