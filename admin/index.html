@@ -154,6 +154,19 @@
       localStorage.removeItem(STORAGE_KEY);
       location.reload();
     }
+    // Dateigrößen-Sperre auf max. 500 KB setzen
+    document.addEventListener('change', function(e) {
+      if (e.target && e.target.type === 'file') {
+        const file = e.target.files[0];
+        const maxSize = 500 * 1024; // 500 KB
+    
+        if (file && file.size > maxSize) {
+          const sizeInKB = (file.size / 1024).toFixed(0);
+          alert(`⚠️ Datei zu groß!\n\nDie Datei "${file.name}" ist ${sizeInKB} KB groß.\nBitte komprimiere das Bild vor dem Hochladen auf max. 500 KB.`);
+          e.target.value = ''; // bricht die Dateiauswahl ab
+        }
+      }
+    }, true);
   </script>
 </body>
 </html>
