@@ -96,102 +96,142 @@
       };
     }
 
-    function initSafeSearch() {
-      let filterQuery = '';
+        function initSafeSearch() {
+          let filterQuery = '';
 
-      function updateSearchUI() {
-        // Prüfen, ob Listen-Karten im DOM vorhanden sind
-        const cards = Array.from(document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]'));
-        const isListView = cards.length > 0;
-        let searchWrapper = document.getElementById('admin-search-wrapper');
+          function updateSearchUI() {
+            // Prüfen, ob Listen-Karten im DOM vorhanden sind
+            const cards = Array.from(document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]'));
+            const isListView = cards.length > 0;
+            let searchWrapper = document.getElementById('admin-search-wrapper');
 
-        if (isListView) {
-          if (!searchWrapper) {
-            searchWrapper = document.createElement('div');
-            searchWrapper.id = 'admin-search-wrapper';
+            if (isListView) {
+              if (!searchWrapper) {
+                searchWrapper = document.createElement('div');
+                searchWrapper.id = 'admin-search-wrapper';
 
-            const input = document.createElement('input');
-            input.id = 'admin-search-input';
-            input.type = 'text';
-            input.placeholder = '🔍 Präparate durchsuchen...';
-            input.value = filterQuery;
+                const input = document.createElement('input');
+                input.id = 'admin-search-input';
+                input.type = 'text';
+                input.placeholder = '🔍 Präparate durchsuchen...';
+                input.value = filterQuery;
+    
+                input.addEventListener('input', (e) => {
+                  filterQuery = e.target.value.toLowerCase().trim();
+                  applyFilter();
+                });
 
-            input.addEventListener('input', (e) => {
-              filterQuery = e.target.value.toLowerCase().trim();
+                searchWrapper.appendChild(input);
+                document.body.appendChild(searchWrapper);
+              }
               applyFilter();
+            } else {
+              // Ausblenden, wenn keine Liste vorhanden ist
+              if (searchWrapper) {
+                searchWrapper.remove();
+              }
+            }
+          }
+
+          function applyFilter() {
+            const cards = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+            cards.forEach(card => {
+              if (card.id === 'admin-search-wrapper' || card.contains(document.getElementById('admin-search-wrapper'))) return;
+
+              const text = card.textContent.toLowerCase();
+              if (filterQuery === '' || text.includes(filterQuery)) {
+                card.style.setProperty('display', '', 'important');
+              } else {
+                card.style.setProperty('display', 'none', 'important');
+              }
             });
+          }
 
-            searchWrapper.appendChild(input);
-            document.body.appendChild(searchWrapper);
-          }
-          applyFilter();
-        } else {
-          // Ausblenden, wenn keine Liste vorhanden ist
-          if (searchWrapper) {
-            searchWrapper.remove();
-          }
+          // Prüft dynamisch alle 500ms, ob wir in der Liste sind
+          setInterval(updateSearchUI, 500);
         }
-      }
+        function logout() {
+          localStorage.removeItem(STORAGE_KEY);
+          location.reload();
+        }
+    // ⚡ Vollautomatische Bildkomprimierung vor dem Hochladen
+    document.addEventListener('change', function(e) {
+      if (e.target && e.target.type === 'file' && e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
 
-      function applyFilter() {
-        const cards = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
-        cards.forEach(card => {
-          if (card.id === 'admin-search-wrapper' || card.contains(document.getElementById('admin-search-wrapper'))) return;
+        // Nur verarbeiten, wenn es ein Bild ist, größer als 300 KB und noch nicht komprimiert
+        if (e.__autoCompressed || !file.type.startsWith('image/') || file.size <= 300 * 1024) {
+          return;
+        }
 
-          const text = card.textContent.toLowerCase();
-          if (filterQuery === '' || text.includes(filterQuery)) {
-            card.style.setProperty('display', '', 'important');
-          } else {
-            card.style.setProperty('display', 'none', 'important');
-          }
+        // Stoppe die Weitergabe an Decap CMS, bis das Bild verkleinert ist
+        e.stopImmediatePropagation();
+
+        // Max. 1600px Breite/Höhe und 75% JPEG-Qualität
+        autoCompressImage(file, 1600, 0.75).then(compressedFile => {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(compressedFile);
+          e.target.files = dataTransfer.files;
+
+          // Neues Change-Event auslösen, damit Decap CMS das neue Bild übernimmt
+          const newEvent = new Event('change', { bubbles: true });
+          newEvent.__autoCompressed = true;
+          e.target.dispatchEvent(newEvent);
+        }).catch(err => {
+          console.error("Automatische Komprimierung fehlgeschlagen:", err);
         });
       }
+    }, true); // Capture-Phase: fängt das Event vor Decap CMS ab
 
-      // Prüft dynamisch alle 500ms, ob wir in der Liste sind
-      setInterval(updateSearchUI, 500);
-    }
-    function logout() {
-      localStorage.removeItem(STORAGE_KEY);
-      location.reload();
-    }
-    // 🛑 Harte Upload-Sperre für Bilder > 500 KB
-    (function() {
-      const MAX_SIZE = 500 * 1024; // 500 KB in Bytes
+    function autoCompressImage(file, maxDimension, quality) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(event) {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = function() {
+            let width = img.width;
+            let height = img.height;
 
-    function checkAndBlock(file) {
-        if (file && file.size > MAX_SIZE) {
-          const sizeKB = (file.size / 1024).toFixed(0);
-          alert(`⚠️ Datei zu groß!\n\nDie Datei "${file.name}" ist ${sizeKB} KB groß.\nBitte verkleinere das Bild vor dem Hochladen auf maximal 500 KB.`);
-          return false;
-        }
-        return true;
-      }
-
-  // 1. FileReader abfangen (Decap nutzt das zum Konvertieren & Hochladen)
-      ['readAsDataURL', 'readAsArrayBuffer', 'readAsText', 'readAsBinaryString'].forEach(method => {
-        if (FileReader.prototype[method]) {
-          const originalMethod = FileReader.prototype[method];
-          FileReader.prototype[method] = function(file) {
-            if (file instanceof File && !checkAndBlock(file)) {
-          // Bricht das Einlesen der Datei im CMS ab
-              throw new Error('Upload abgebrochen: Datei zu groß.');
+            // Proportionen beibehalten und Auflösung begrenzen
+            if (width > height) {
+              if (width > maxDimension) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              }
+            } else {
+              if (height > maxDimension) {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
             }
-            return originalMethod.apply(this, arguments);
-          };
-        }
-      });
 
-  // 2. URL.createObjectURL abfangen (für die Bild-Vorschau)
-      if (window.URL && window.URL.createObjectURL) {
-        const originalCreate = window.URL.createObjectURL;
-        window.URL.createObjectURL = function(obj) {
-          if (obj instanceof File && !checkAndBlock(obj)) {
-            return '';
-          }
-          return originalCreate.apply(this, arguments);
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                reject(new Error("Canvas-Konvertierung fehlgeschlagen"));
+                return;
+              }
+              const cleanName = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+              const newFile = new File([blob], cleanName, {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+              });
+              resolve(newFile);
+            }, 'image/jpeg', quality);
+          };
+          img.onerror = reject;
         };
-      }
-    })();
+        reader.onerror = reject;
+      });
+    }    
   </script>
 </body>
 </html>
