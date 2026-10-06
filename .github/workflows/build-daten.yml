@@ -1,0 +1,35 @@
+name: daten-json-generator
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Verbinde alle Einzel-JSONs zu einer daten.json
+        run: |
+          shopt -s nullglob
+          files=(praeparate/*.json)
+          if [ ${#files[@]} -gt 0 ]; then
+            # 'jq' ist ein Tool, das JSONs automatisch zu einem sauberen Array verbindet
+            jq -s '.' "${files[@]}" > daten.json
+          else
+            echo "[]" > daten.json
+          fi
+
+      - name: Speicher die fertige daten.json im Repo ab
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "action@github.com"
+          git add daten.json
+          
+          # Nur speichern, wenn sich wirklich was geändert hat
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-generiere daten.json"
+          
+          # Neu laden, falls in der Zwischenzeit jemand anderes etwas gespeichert hat, dann pushen
+          git pull --rebase origin main
+          git push
