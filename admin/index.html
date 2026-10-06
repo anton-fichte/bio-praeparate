@@ -235,22 +235,25 @@
         reader.onerror = reject;
       });
     }  
-    // ⚡ Live-Prüfung auf doppelte IDs direkt beim Tippen / Verlassen des Feldes
+    // 1. Live-Check: Rot färben + Publish-Button deaktivieren
     document.addEventListener('focusout', checkLiveDuplicates);
     document.addEventListener('input', checkLiveDuplicates);
 
-    function checkLiveDuplicates(e) {
-      if (!e.target || e.target.tagName !== 'INPUT') return;
-
-      // Alle Eingabefelder im CMS finden
+    function checkLiveDuplicates() {
+      // Präzise nur Eingabefelder finden, die direkt im "id"-Widget liegen
       const allInputs = Array.from(document.querySelectorAll('input'));
-
-      // Nur die Eingabefelder herausfiltern, die zum Label "ID" gehören
       const idInputs = allInputs.filter(input => {
+        // Wandere im DOM hoch, um das Feld-Container-Element zu prüfen
         let parent = input.parentElement;
-        for (let i = 0; i < 4 && parent; i++) {
+        for (let i = 0; i < 5 && parent; i++) {
+          // Nutze den Data-Attribute-Namen oder die id des Control-Blocks von Decap
+          const controlName = parent.getAttribute('data-field-name') || parent.id || '';
+          if (controlName.toLowerCase().includes('id')) {
+            return true;
+          }
+          // Fallback über das Label-Textfeld (exakter Abgleich auf "ID")
           const label = parent.querySelector('label');
-          if (label && label.textContent.trim() === 'ID') {
+          if (label && label.textContent.trim().toUpperCase() === 'ID') {
             return true;
           }
           parent = parent.parentElement;
@@ -258,7 +261,7 @@
         return false;
       });
 
-      // Häufigkeit der eingegebenen IDs zählen
+      // Vorkommen der eingetragenen IDs zählen
       const counts = {};
       idInputs.forEach(input => {
         const val = input.value.trim();
@@ -267,13 +270,15 @@
         }
       });
 
-      // Visuelles Feedback anwenden (Rot färben + Hinweis anzeigen)
+      let hasDuplicates = false;
+
+      // Feedback an die ID-Felder anbringen
       idInputs.forEach(input => {
         const val = input.value.trim();
         let errorMsg = input.parentNode.querySelector('.id-duplicate-warning');
 
         if (val && counts[val] > 1) {
-          // ❌ Doppelter Wert: Rot markieren
+          hasDuplicates = true;
           input.style.borderColor = '#dc2626';
           input.style.backgroundColor = '#fef2f2';
 
@@ -283,16 +288,64 @@
             errorMsg.style.cssText = 'color: #dc2626; font-size: 13px; font-weight: bold; margin-top: 5px;';
             input.parentNode.appendChild(errorMsg);
           }
-          errorMsg.textContent = `⚠️ Die ID "${val}" ist bereits vergeben!`;
+          errorMsg.textContent = `⚠️ Die ID "${val}" ist doppelt vergeben!`;
         } else {
-          // ✅ Gültig / Einzigartig: Normalzustand wiederherstellen
           input.style.borderColor = '';
           input.style.backgroundColor = '';
           if (errorMsg) {
             errorMsg.remove();
           }
+         }
+      });
+
+      // 🔒 Punkt 1: Publish-Buttons im CMS hart sperren / freigeben
+      const publishBtns = document.querySelectorAll('button[class*="PublishButton"], button[data-testid="publish-button"]');
+      publishBtns.forEach(btn => {
+        if (hasDuplicates) {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+          btn.title = 'Speichern nicht möglich: Es existiert eine doppelte ID.';
+        } else {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+          btn.title = '';
         }
       });
+    }
+
+    // 2. Harte preSave-Sperre als finale Absicherung vor dem GitHub-Commit
+    function initDuplicateCheck() {
+      if (window.CMS) {
+        CMS.registerEventListener({
+          name: 'preSave',
+          handler: ({ entry }) => {
+            const data = entry.get('data').toJS();
+            const list = data.praeparate || [];
+
+            const seenIds = new Set();
+            const duplicates = new Set();
+
+            list.forEach(item => {
+              const id = item && item.id ? String(item.id).trim() : '';
+              if (id) {
+                if (seenIds.has(id)) {
+                  duplicates.add(id);
+                } else {
+                  seenIds.add(id);
+                }
+              }
+            });
+
+            if (duplicates.size > 0) {
+              const dupList = Array.from(duplicates).join(', ');
+              alert(`⚠️ Speichern blockiert!\n\nFolgende ID ist doppelt vergeben: "${dupList}"\nBitte korrigiere die ID vor dem Veröffentlichen.`);
+              throw new Error(`Speichern wegen doppelter ID blockiert: ${dupList}`);
+            }
+          }
+        });
+      }
     }
   </script>
 </body>
