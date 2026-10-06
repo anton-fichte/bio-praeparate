@@ -234,7 +234,66 @@
         };
         reader.onerror = reject;
       });
-    }    
+    }  
+    // ⚡ Live-Prüfung auf doppelte IDs direkt beim Tippen / Verlassen des Feldes
+    document.addEventListener('focusout', checkLiveDuplicates);
+    document.addEventListener('input', checkLiveDuplicates);
+
+    function checkLiveDuplicates(e) {
+      if (!e.target || e.target.tagName !== 'INPUT') return;
+
+      // Alle Eingabefelder im CMS finden
+      const allInputs = Array.from(document.querySelectorAll('input'));
+
+      // Nur die Eingabefelder herausfiltern, die zum Label "ID" gehören
+      const idInputs = allInputs.filter(input => {
+        let parent = input.parentElement;
+        for (let i = 0; i < 4 && parent; i++) {
+          const label = parent.querySelector('label');
+          if (label && label.textContent.trim() === 'ID') {
+            return true;
+          }
+          parent = parent.parentElement;
+        }
+        return false;
+      });
+
+      // Häufigkeit der eingegebenen IDs zählen
+      const counts = {};
+      idInputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) {
+          counts[val] = (counts[val] || 0) + 1;
+        }
+      });
+
+      // Visuelles Feedback anwenden (Rot färben + Hinweis anzeigen)
+      idInputs.forEach(input => {
+        const val = input.value.trim();
+        let errorMsg = input.parentNode.querySelector('.id-duplicate-warning');
+
+        if (val && counts[val] > 1) {
+          // ❌ Doppelter Wert: Rot markieren
+          input.style.borderColor = '#dc2626';
+          input.style.backgroundColor = '#fef2f2';
+
+          if (!errorMsg) {
+            errorMsg = document.createElement('div');
+            errorMsg.className = 'id-duplicate-warning';
+            errorMsg.style.cssText = 'color: #dc2626; font-size: 13px; font-weight: bold; margin-top: 5px;';
+            input.parentNode.appendChild(errorMsg);
+          }
+          errorMsg.textContent = `⚠️ Die ID "${val}" ist bereits vergeben!`;
+        } else {
+          // ✅ Gültig / Einzigartig: Normalzustand wiederherstellen
+          input.style.borderColor = '';
+          input.style.backgroundColor = '';
+          if (errorMsg) {
+            errorMsg.remove();
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
