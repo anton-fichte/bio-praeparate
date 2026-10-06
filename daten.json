@@ -18,6 +18,16 @@
         "Zelle"
       ],
       "bild": "bilder/002.jpg"
+    },
+    {
+      "stichwoerter": [
+        "500kb",
+        "test"
+      ],
+      "bild": "/bilder/nik-mqgktlxqfcy-unsplash.jpg",
+      "id": "003",
+      "name": "test bildgröße",
+      "ort": "irgendwo"
     }
   ]
 }
