@@ -154,19 +154,44 @@
       localStorage.removeItem(STORAGE_KEY);
       location.reload();
     }
-    // Dateigrößen-Sperre auf max. 500 KB setzen
-    document.addEventListener('change', function(e) {
-      if (e.target && e.target.type === 'file') {
-        const file = e.target.files[0];
-        const maxSize = 500 * 1024; // 500 KB
-    
-        if (file && file.size > maxSize) {
-          const sizeInKB = (file.size / 1024).toFixed(0);
-          alert(`⚠️ Datei zu groß!\n\nDie Datei "${file.name}" ist ${sizeInKB} KB groß.\nBitte komprimiere das Bild vor dem Hochladen auf max. 500 KB.`);
-          e.target.value = ''; // bricht die Dateiauswahl ab
+    // 🛑 Harte Upload-Sperre für Bilder > 500 KB
+    (function() {
+      const MAX_SIZE = 500 * 1024; // 500 KB in Bytes
+
+    function checkAndBlock(file) {
+        if (file && file.size > MAX_SIZE) {
+          const sizeKB = (file.size / 1024).toFixed(0);
+          alert(`⚠️ Datei zu groß!\n\nDie Datei "${file.name}" ist ${sizeKB} KB groß.\nBitte verkleinere das Bild vor dem Hochladen auf maximal 500 KB.`);
+          return false;
         }
+        return true;
       }
-    }, true);
+
+  // 1. FileReader abfangen (Decap nutzt das zum Konvertieren & Hochladen)
+      ['readAsDataURL', 'readAsArrayBuffer', 'readAsText', 'readAsBinaryString'].forEach(method => {
+        if (FileReader.prototype[method]) {
+          const originalMethod = FileReader.prototype[method];
+          FileReader.prototype[method] = function(file) {
+            if (file instanceof File && !checkAndBlock(file)) {
+          // Bricht das Einlesen der Datei im CMS ab
+              throw new Error('Upload abgebrochen: Datei zu groß.');
+            }
+            return originalMethod.apply(this, arguments);
+          };
+        }
+      });
+
+  // 2. URL.createObjectURL abfangen (für die Bild-Vorschau)
+      if (window.URL && window.URL.createObjectURL) {
+        const originalCreate = window.URL.createObjectURL;
+        window.URL.createObjectURL = function(obj) {
+          if (obj instanceof File && !checkAndBlock(obj)) {
+            return '';
+          }
+          return originalCreate.apply(this, arguments);
+        };
+      }
+    })();
   </script>
 </body>
 </html>
