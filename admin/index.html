@@ -12,6 +12,19 @@
     .login-box input:focus { border-color: #2563eb; }
     .login-box button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
     .login-box button:hover { background: #1d4ed8; }
+
+    /* Duplikat-Warnung Styling */
+    .id-duplicate-warning {
+      color: #991b1b;
+      background-color: #fef2f2;
+      border: 1px solid #fca5a5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-top: 8px;
+      display: block;
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
@@ -30,6 +43,19 @@
 
   <script>
     const STORAGE_KEY = 'decap-cms-user';
+    let existingIds = new Set();
+
+    // 1. Bereits existierende IDs aus daten.json im Hintergrund laden
+    function loadExistingIds() {
+      fetch('../daten.json')
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            existingIds = new Set(data.map(item => String(item.id).trim()).filter(Boolean));
+          }
+        })
+        .catch(err => console.error("Konnte daten.json für ID-Check nicht laden:", err));
+    }
 
     if (!localStorage.getItem(STORAGE_KEY)) {
       document.getElementById('login-container').style.display = 'block';
@@ -45,9 +71,17 @@
     } else {
       document.getElementById('logout-btn').style.display = 'block';
 
+      loadExistingIds();
+      setInterval(loadExistingIds, 10000); // Alle 10s aktualisieren
+
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
       document.body.appendChild(script);
+
+      script.onload = function() {
+        initDuplicateCheck();
+        setInterval(checkLiveDuplicates, 500);
+      };
     }
 
     function logout() {
@@ -55,7 +89,86 @@
       location.reload();
     }
 
-    // Bildkomprimierung (bleibt als Schutz für das Repo aktiv!)
+    // 2. LIVE-CHECK: Prüft während der Eingabe, ob die ID bereits existiert
+    function checkLiveDuplicates() {
+      const allInputs = Array.from(document.querySelectorAll('input'));
+      const idInput = allInputs.find(input => {
+        if (input.id === 'password-input') return false;
+        const controlPane = input.closest('[class*="ControlContainer"], [data-field-name]');
+        if (!controlPane) return false;
+        const fieldName = (controlPane.getAttribute('data-field-name') || '').toLowerCase();
+        if (fieldName === 'id') return true;
+        const label = controlPane.querySelector('label');
+        if (label) {
+          const text = label.textContent.trim().toLowerCase();
+          return text === 'id' || text === 'id:';
+        }
+        return false;
+      });
+
+      if (!idInput) return;
+
+      const val = idInput.value.trim();
+      let errorMsg = idInput.parentNode.querySelector('.id-duplicate-warning');
+
+      // Ermitteln, ob wir ein BEREITS EXISTIERENDES Präparat bearbeiten (dann ist seine eigene ID erlaubt)
+      const hash = window.location.hash;
+      const isEditingExisting = hash.includes('/entries/') && !hash.endsWith('/new');
+      const currentSlug = isEditingExisting ? hash.split('/entries/')[1] : null;
+
+      const isDuplicate = val && existingIds.has(val) && (val !== currentSlug);
+
+      if (isDuplicate) {
+        idInput.style.borderColor = '#dc2626';
+        idInput.style.backgroundColor = '#fef2f2';
+
+        if (!errorMsg) {
+          errorMsg = document.createElement('div');
+          errorMsg.className = 'id-duplicate-warning';
+          idInput.parentNode.appendChild(errorMsg);
+        }
+        errorMsg.textContent = `⚠️ Die ID "${val}" existiert bereits für ein anderes Präparat!`;
+      } else {
+        idInput.style.borderColor = '';
+        idInput.style.backgroundColor = '';
+        if (errorMsg) errorMsg.remove();
+      }
+
+      // Speichern-Button sperren, wenn Duplikat vorliegt
+      const publishBtns = document.querySelectorAll('button[class*="PublishButton"], button[data-testid="publish-button"]');
+      publishBtns.forEach(btn => {
+        if (isDuplicate) {
+          btn.style.opacity = '0.4';
+          btn.style.pointerEvents = 'none';
+        } else {
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        }
+      });
+    }
+
+    // 3. PRE-SAVE-HOOK: Letzte harte Blockade vor dem Speichern
+    function initDuplicateCheck() {
+      if (window.CMS) {
+        window.CMS.registerEventListener({
+          name: 'preSave',
+          handler: ({ entry }) => {
+            const data = entry.get('data').toJS();
+            const newId = data.id ? String(data.id).trim() : '';
+            const hash = window.location.hash;
+            const isEditingExisting = hash.includes('/entries/') && !hash.endsWith('/new');
+            const currentSlug = isEditingExisting ? hash.split('/entries/')[1] : null;
+
+            if (newId && existingIds.has(newId) && newId !== currentSlug) {
+              alert(`⚠️ Speichern abgebrochen!\n\nDie ID "${newId}" wird bereits verwendet.`);
+              throw new Error(`Speichern wegen doppelter ID blockiert: ${newId}`);
+            }
+          }
+        });
+      }
+    }
+
+    // 4. BILD-KOMPRIMIERUNG: Verhindert riesige Foto-Uploads
     document.addEventListener('change', function(e) {
       if (e.target && e.target.type === 'file' && e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
