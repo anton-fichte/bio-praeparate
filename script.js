@@ -41,16 +41,14 @@ function zeigeDetails(praeparat) {
     modal.classList.remove("hidden");
 }
 
-// Daten aus daten.json laden und CMS-Struktur glätten
+
+// Daten aus daten.json laden
 fetch("./daten.json")
     .then(response => response.json())
     .then(daten => {
-        const rohdaten = daten.praeparate || [];
-
-        praeparate = rohdaten.map(eintrag => {
-            return eintrag.praeparat ? eintrag.praeparat : eintrag;
-        });
-
+        // Die neue Datenstruktur ist bereits ein fertiges Array, 
+        // kein Verschachteln mehr nötig!
+        praeparate = daten || [];
         anzeigen();
     })
     .catch(error => {
