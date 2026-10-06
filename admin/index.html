@@ -42,24 +42,26 @@
       border-color: #1d4ed8;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
-     /* Hinweistexte unter den Eingabefeldern hervorheben */
-    [class*="FieldHint"], [class*="ControlHint"] {
-      color: #991b1b !important;            /* Dunkelrot */
-      background-color: #fef2f2 !important;  /* Heller Rot-Ton */
-      border: 1px solid #fca5a5 !important;  /* Roter Rahmen */
-      padding: 8px 12px !important;
-      border-radius: 6px !important;
-      font-weight: 600 !important;
-      margin-top: 8px !important;
-      display: block !important;
+
+    /* Eigene ID-Duplikat-Warnung gezielt gestalten */
+    .id-duplicate-warning {
+      color: #991b1b;
+      background-color: #fef2f2;
+      border: 1px solid #fca5a5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-top: 8px;
+      display: block;
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
-     <button id="logout-btn" onclick="logout()" style="display: none; position: fixed; top: 15px; right: 15px; z-index: 9999; padding: 8px 14px; background-color: #d9534f; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-      Abmelden
-    </button>
+  <button id="logout-btn" onclick="logout()" style="display: none; position: fixed; top: 15px; right: 15px; z-index: 9999; padding: 8px 14px; background-color: #d9534f; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+    Abmelden
   </button>
+
   <!-- Eigene Passwort-Maske -->
   <div id="login-container" class="login-box" style="display: none;">
     <h2>Bio-Präparate Admin</h2>
@@ -73,7 +75,6 @@
   <script>
     const STORAGE_KEY = 'decap-cms-user';
 
-    // Wenn kein Login hinterlegt ist, Passwort-Formular anzeigen
     if (!localStorage.getItem(STORAGE_KEY)) {
       document.getElementById('login-container').style.display = 'block';
       
@@ -85,98 +86,89 @@
           location.reload();
         }
       });
-      } else {
-      // Logout-Button anzeigen, da der Nutzer eingeloggt ist
+    } else {
       document.getElementById('logout-btn').style.display = 'block';
 
-      // Decap CMS laden
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
       document.body.appendChild(script);
 
       script.onload = function() {
         initSafeSearch();
+        initDuplicateCheck(); // CMS-Event-Listener bei Skript-Laden aktivieren!
       };
     }
 
-        function initSafeSearch() {
-          let filterQuery = '';
+    function initSafeSearch() {
+      let filterQuery = '';
 
-          function updateSearchUI() {
-            // Prüfen, ob Listen-Karten im DOM vorhanden sind
-            const cards = Array.from(document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]'));
-            const isListView = cards.length > 0;
-            let searchWrapper = document.getElementById('admin-search-wrapper');
+      function updateSearchUI() {
+        const cards = Array.from(document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]'));
+        const isListView = cards.length > 0;
+        let searchWrapper = document.getElementById('admin-search-wrapper');
 
-            if (isListView) {
-              if (!searchWrapper) {
-                searchWrapper = document.createElement('div');
-                searchWrapper.id = 'admin-search-wrapper';
+        if (isListView) {
+          if (!searchWrapper) {
+            searchWrapper = document.createElement('div');
+            searchWrapper.id = 'admin-search-wrapper';
 
-                const input = document.createElement('input');
-                input.id = 'admin-search-input';
-                input.type = 'text';
-                input.placeholder = '🔍 Präparate durchsuchen...';
-                input.value = filterQuery;
-    
-                input.addEventListener('input', (e) => {
-                  filterQuery = e.target.value.toLowerCase().trim();
-                  applyFilter();
-                });
-
-                searchWrapper.appendChild(input);
-                document.body.appendChild(searchWrapper);
-              }
+            const input = document.createElement('input');
+            input.id = 'admin-search-input';
+            input.type = 'text';
+            input.placeholder = '🔍 Präparate durchsuchen...';
+            input.value = filterQuery;
+            
+            input.addEventListener('input', (e) => {
+              filterQuery = e.target.value.toLowerCase().trim();
               applyFilter();
-            } else {
-              // Ausblenden, wenn keine Liste vorhanden ist
-              if (searchWrapper) {
-                searchWrapper.remove();
-              }
-            }
-          }
-
-          function applyFilter() {
-            const cards = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
-            cards.forEach(card => {
-              if (card.id === 'admin-search-wrapper' || card.contains(document.getElementById('admin-search-wrapper'))) return;
-
-              const text = card.textContent.toLowerCase();
-              if (filterQuery === '' || text.includes(filterQuery)) {
-                card.style.setProperty('display', '', 'important');
-              } else {
-                card.style.setProperty('display', 'none', 'important');
-              }
             });
-          }
 
-          // Prüft dynamisch alle 500ms, ob wir in der Liste sind
-          setInterval(updateSearchUI, 500);
+            searchWrapper.appendChild(input);
+            document.body.appendChild(searchWrapper);
+          }
+          applyFilter();
+        } else {
+          if (searchWrapper) {
+            searchWrapper.remove();
+          }
         }
-        function logout() {
-          localStorage.removeItem(STORAGE_KEY);
-          location.reload();
-        }
-    // ⚡ Vollautomatische Bildkomprimierung vor dem Hochladen
+      }
+
+      function applyFilter() {
+        const cards = document.querySelectorAll('[class*="ListItem"], [class*="ObjectControl"]');
+        cards.forEach(card => {
+          if (card.id === 'admin-search-wrapper' || card.contains(document.getElementById('admin-search-wrapper'))) return;
+
+          const text = card.textContent.toLowerCase();
+          if (filterQuery === '' || text.includes(filterQuery)) {
+            card.style.setProperty('display', '', 'important');
+          } else {
+            card.style.setProperty('display', 'none', 'important');
+          }
+        });
+      }
+
+      setInterval(updateSearchUI, 500);
+    }
+
+    function logout() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    // Bildkomprimierung
     document.addEventListener('change', function(e) {
       if (e.target && e.target.type === 'file' && e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
+        if (e.__autoCompressed || !file.type.startsWith('image/') || file.size <= 300 * 1024) return;
 
-        // Nur verarbeiten, wenn es ein Bild ist, größer als 300 KB und noch nicht komprimiert
-        if (e.__autoCompressed || !file.type.startsWith('image/') || file.size <= 300 * 1024) {
-          return;
-        }
-
-        // Stoppe die Weitergabe an Decap CMS, bis das Bild verkleinert ist
         e.stopImmediatePropagation();
 
-        // Max. 1600px Breite/Höhe und 75% JPEG-Qualität
         autoCompressImage(file, 1600, 0.75).then(compressedFile => {
           const dataTransfer = new DataTransfer();
           dataTransfer.items.add(compressedFile);
           e.target.files = dataTransfer.files;
 
-          // Neues Change-Event auslösen, damit Decap CMS das neue Bild übernimmt
           const newEvent = new Event('change', { bubbles: true });
           newEvent.__autoCompressed = true;
           e.target.dispatchEvent(newEvent);
@@ -184,7 +176,7 @@
           console.error("Automatische Komprimierung fehlgeschlagen:", err);
         });
       }
-    }, true); // Capture-Phase: fängt das Event vor Decap CMS ab
+    }, true);
 
     function autoCompressImage(file, maxDimension, quality) {
       return new Promise((resolve, reject) => {
@@ -197,7 +189,6 @@
             let width = img.width;
             let height = img.height;
 
-            // Proportionen beibehalten und Auflösung begrenzen
             if (width > height) {
               if (width > maxDimension) {
                 height = Math.round((height * maxDimension) / width);
@@ -234,45 +225,41 @@
         };
         reader.onerror = reject;
       });
-    }  
-    // 1. Live-Check: Rot färben + Publish-Button deaktivieren
+    }
+
+    // 1. Live-Check: Exakt NUR nach echten ID-Feldern suchen
     document.addEventListener('focusout', checkLiveDuplicates);
     document.addEventListener('input', checkLiveDuplicates);
 
     function checkLiveDuplicates() {
-      // Präzise nur Eingabefelder finden, die direkt im "id"-Widget liegen
       const allInputs = Array.from(document.querySelectorAll('input'));
+
+      // Präziser ID-Feld-Filter (verhindert False-Positives bei Name, Standort etc.)
       const idInputs = allInputs.filter(input => {
-        // Wandere im DOM hoch, um das Feld-Container-Element zu prüfen
         let parent = input.parentElement;
-        for (let i = 0; i < 5 && parent; i++) {
-          // Nutze den Data-Attribute-Namen oder die id des Control-Blocks von Decap
-          const controlName = parent.getAttribute('data-field-name') || parent.id || '';
-          if (controlName.toLowerCase().includes('id')) {
-            return true;
-          }
-          // Fallback über das Label-Textfeld (exakter Abgleich auf "ID")
+        for (let i = 0; i < 4 && parent; i++) {
+          const controlName = (parent.getAttribute('data-field-name') || '').toLowerCase();
+          if (controlName === 'id') return true;
+
           const label = parent.querySelector('label');
-          if (label && label.textContent.trim().toUpperCase() === 'ID') {
-            return true;
+          if (label) {
+            const labelText = label.textContent.trim().toLowerCase();
+            // Nur matchen, wenn das Label strikt "id" oder "id:" lautet
+            if (labelText === 'id' || labelText === 'id:') return true;
           }
           parent = parent.parentElement;
         }
         return false;
       });
 
-      // Vorkommen der eingetragenen IDs zählen
       const counts = {};
       idInputs.forEach(input => {
         const val = input.value.trim();
-        if (val) {
-          counts[val] = (counts[val] || 0) + 1;
-        }
+        if (val) counts[val] = (counts[val] || 0) + 1;
       });
 
       let hasDuplicates = false;
 
-      // Feedback an die ID-Felder anbringen
       idInputs.forEach(input => {
         const val = input.value.trim();
         let errorMsg = input.parentNode.querySelector('.id-duplicate-warning');
@@ -285,40 +272,46 @@
           if (!errorMsg) {
             errorMsg = document.createElement('div');
             errorMsg.className = 'id-duplicate-warning';
-            errorMsg.style.cssText = 'color: #dc2626; font-size: 13px; font-weight: bold; margin-top: 5px;';
             input.parentNode.appendChild(errorMsg);
           }
           errorMsg.textContent = `⚠️ Die ID "${val}" ist doppelt vergeben!`;
         } else {
           input.style.borderColor = '';
           input.style.backgroundColor = '';
-          if (errorMsg) {
-            errorMsg.remove();
-          }
-         }
+          if (errorMsg) errorMsg.remove();
+        }
       });
 
-      // 🔒 Punkt 1: Publish-Buttons im CMS hart sperren / freigeben
+      // Absolute Klick-Sperre auf Publish-Buttons legen
+      window.__hasDuplicateIds = hasDuplicates;
       const publishBtns = document.querySelectorAll('button[class*="PublishButton"], button[data-testid="publish-button"]');
       publishBtns.forEach(btn => {
         if (hasDuplicates) {
-          btn.disabled = true;
-          btn.style.opacity = '0.5';
-          btn.style.cursor = 'not-allowed';
-          btn.title = 'Speichern nicht möglich: Es existiert eine doppelte ID.';
+          btn.style.opacity = '0.4';
+          btn.style.pointerEvents = 'none'; // Verhindert Klicks vollständig
         } else {
-          btn.disabled = false;
           btn.style.opacity = '1';
-          btn.style.cursor = 'pointer';
-          btn.title = '';
+          btn.style.pointerEvents = 'auto';
         }
       });
     }
 
-    // 2. Harte preSave-Sperre als finale Absicherung vor dem GitHub-Commit
+    // Abfangen von Klicks in der Capture-Phase (Sicherheitsnetz)
+    document.addEventListener('click', function(e) {
+      if (window.__hasDuplicateIds) {
+        const btn = e.target.closest('button[class*="PublishButton"], button[data-testid="publish-button"]');
+        if (btn) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          alert('⚠️ Veröffentlichen blockiert: Es existiert mindestens eine doppelte ID im Formular!');
+        }
+      }
+    }, true);
+
+    // 2. CMS preSave Event registrieren
     function initDuplicateCheck() {
       if (window.CMS) {
-        CMS.registerEventListener({
+        window.CMS.registerEventListener({
           name: 'preSave',
           handler: ({ entry }) => {
             const data = entry.get('data').toJS();
@@ -340,7 +333,7 @@
 
             if (duplicates.size > 0) {
               const dupList = Array.from(duplicates).join(', ');
-              alert(`⚠️ Speichern blockiert!\n\nFolgende ID ist doppelt vergeben: "${dupList}"\nBitte korrigiere die ID vor dem Veröffentlichen.`);
+              alert(`⚠️ Speichern abgebrochen!\n\nFolgende ID ist doppelt vergeben: "${dupList}"`);
               throw new Error(`Speichern wegen doppelter ID blockiert: ${dupList}`);
             }
           }
