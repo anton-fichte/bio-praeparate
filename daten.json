@@ -27,15 +27,5 @@
     "name": "iPhone test",
     "ort": "iPhone ",
     "bild": "/bilder/img_8077.jpg"
-  },
-  {
-    "stichwoerter": [
-      "mac",
-      "test"
-    ],
-    "id": "004",
-    "name": "Mac Test",
-    "ort": "Macbook Air",
-    "bild": "/bilder/img.jpg"
   }
 ]
