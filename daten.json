@@ -35,6 +35,17 @@
   },
   {
     "stichwoerter": [
+      "Roggen",
+      "Querschnitt",
+      "Getreide"
+    ],
+    "id": "1007",
+    "name": "Roggen Präparat 7",
+    "ort": "Kasten 31 Präparat",
+    "bild": "/bilder/img_6856.jpg"
+  },
+  {
+    "stichwoerter": [
       "Erbse",
       "Querschnitt"
     ],
@@ -210,6 +221,23 @@
     "id": "5002",
     "bild": "/bilder/img_5213.jpg",
     "name": "Wurzelknöllchen der Erle mit symbiotischen Bakterien",
+    "ort": "Kasten 18"
+  },
+  {
+    "stichwoerter": [
+      "Pflanze",
+      "Querschnitt",
+      "durch",
+      "gesunde",
+      "und",
+      "geschädigte",
+      "Blätter",
+      "zum",
+      "Vergleich"
+    ],
+    "bild": "/bilder/img_5217.jpg",
+    "id": "5003",
+    "name": "Nadelblatt der Tanne",
     "ort": "Kasten 18"
   },
   {
