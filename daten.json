@@ -7,5 +7,14 @@
     "name": "Weizenkorn quer",
     "ort": "Kasten 31",
     "bild": "/bilder/img_5409.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Getreide"
+    ],
+    "id": "143",
+    "name": "Weizen-spelzen-pulver ",
+    "ort": "Kasten 31 ",
+    "bild": "/bilder/img_5406.jpg"
   }
 ]
