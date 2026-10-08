@@ -270,6 +270,17 @@
   },
   {
     "stichwoerter": [
+      "Fruchtknoten",
+      "quer",
+      "Ovarium"
+    ],
+    "id": "302",
+    "name": "Lilie",
+    "ort": "Kasten 10",
+    "bild": "/bilder/656b17a4-52ea-47bc-971e-c756d9d88a96.jpeg"
+  },
+  {
+    "stichwoerter": [
       "Torfmoos",
       "Blatt"
     ],
@@ -472,6 +483,15 @@
     "name": "Fichtentrieb mit Ananasgalle ",
     "ort": "Kasten 18",
     "bild": "/bilder/img_5221.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Pflanze",
+      "querschnitt"
+    ],
+    "id": "5007",
+    "name": "Durch Luftverschmutzung zerstörte Flechte",
+    "ort": "Kasten 18"
   },
   {
     "stichwoerter": [
