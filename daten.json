@@ -114,5 +114,14 @@
     "name": "Obelia",
     "ort": "Kasten 12",
     "bild": "/bilder/obelia.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Hydra3"
+    ],
+    "id": "704",
+    "name": "Hydra",
+    "ort": "Kasten 12",
+    "bild": "/bilder/hydra.jpg"
   }
 ]
