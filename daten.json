@@ -17,5 +17,13 @@
       "Zelle"
     ],
     "bild": "bilder/002.jpg"
+  },
+  {
+    "stichwoerter": [
+      "test"
+    ],
+    "id": "003",
+    "ort": "Test",
+    "name": "Test"
   }
 ]
