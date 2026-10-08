@@ -106,7 +106,8 @@
     "stichwoerter": [],
     "id": "148",
     "name": "Weizenmehl mit Kreide ",
-    "ort": "Kasten 31"
+    "ort": "Kasten 31",
+    "bild": "/bilder/img_5388.jpg"
   },
   {
     "stichwoerter": [],
@@ -133,14 +134,13 @@
   },
   {
     "stichwoerter": [
-      "Baumrinde",
-      "Fraßgänge",
-      "quer",
-      "Umwelt",
-      "Wald",
-      "Schädling"
+      "Fichtenborkenkäfer",
+      "Tier",
+      "Querschnitt",
+      "durch",
+      "Larve"
     ],
-    "name": "Borkenkäfer",
+    "name": "Fichtenborkenkäfer",
     "ort": "Kasten 18",
     "id": "5001",
     "bild": "/bilder/img_5730.jpg"
