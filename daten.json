@@ -35,5 +35,16 @@
     "name": "Weizenmehl mit Weizen-spelzen ",
     "ort": "Kasten 31",
     "bild": "/bilder/img_5404.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Blüte",
+      "längs",
+      "Insektenfalle"
+    ],
+    "id": "701",
+    "name": "Aronstab",
+    "bild": "/bilder/aronstab.jpg",
+    "ort": "Kasten 28"
   }
 ]
