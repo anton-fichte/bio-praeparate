@@ -81,5 +81,14 @@
     "name": "Mimose",
     "ort": "Kasten 28",
     "bild": "/bilder/mimose.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Hydrozoen"
+    ],
+    "id": "703",
+    "name": "Obelia",
+    "ort": "Kasten 12",
+    "bild": "/bilder/obelia.jpg"
   }
 ]
