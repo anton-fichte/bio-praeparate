@@ -289,5 +289,14 @@
     "name": "Schraubenalge",
     "ort": "Kasten 12",
     "bild": "/bilder/schraubenalge.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Antheridien"
+    ],
+    "id": "709",
+    "name": "Farnprothallium",
+    "ort": "Kasten 8B",
+    "bild": "/bilder/farnprothallium.jpg"
   }
 ]
