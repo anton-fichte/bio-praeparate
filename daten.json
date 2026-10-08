@@ -346,6 +346,15 @@
   },
   {
     "stichwoerter": [
+      "Obelia spec. medusa"
+    ],
+    "id": "411",
+    "name": "Quallenpolyp Meduse",
+    "ort": "Kasten 42 Schwämme Polypen Algen",
+    "bild": "/bilder/20260924_090845.jpg"
+  },
+  {
+    "stichwoerter": [
       "Fichtenborkenkäfer",
       "Tier",
       "Querschnitt",
@@ -372,13 +381,7 @@
     "stichwoerter": [
       "Pflanze",
       "Querschnitt",
-      "durch",
-      "gesunde",
-      "und",
-      "geschädigte",
-      "Blätter",
-      "zum",
-      "Vergleich"
+      "gesund/geschädigtes_Blatt"
     ],
     "bild": "/bilder/img_5217.jpg",
     "id": "5003",
