@@ -195,5 +195,14 @@
     "name": "Champignon",
     "ort": "Kasten 4",
     "bild": "/bilder/champignon.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Pilze"
+    ],
+    "id": "707",
+    "name": "Steinpilz",
+    "ort": "Kasten 4",
+    "bild": "/bilder/steinpilz.jpg"
   }
 ]
