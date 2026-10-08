@@ -53,5 +53,15 @@
     "name": "Aronstab",
     "bild": "/bilder/aronstab.jpg",
     "ort": "Kasten 28"
+  },
+  {
+    "stichwoerter": [
+      "Blattgelenke",
+      "längs"
+    ],
+    "id": "702",
+    "name": "Mimose",
+    "ort": "Kasten 28",
+    "bild": "/bilder/mimose.jpg"
   }
 ]
