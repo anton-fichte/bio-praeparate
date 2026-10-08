@@ -168,5 +168,14 @@
     "name": "Hydra",
     "ort": "Kasten 12",
     "bild": "/bilder/hydra.jpg"
+  },
+  {
+    "stichwoerter": [
+      "Pilze"
+    ],
+    "id": "706",
+    "name": "Champignon",
+    "ort": "Kasten 4",
+    "bild": "/bilder/champignon.jpg"
   }
 ]
