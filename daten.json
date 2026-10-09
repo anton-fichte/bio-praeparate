@@ -170,7 +170,9 @@
     "bild": "/bilder/img_5424.jpg"
   },
   {
-    "stichwoerter": [],
+    "stichwoerter": [
+      "Nahrungsmittel"
+    ],
     "id": "136",
     "name": "Magermilch ",
     "ort": "Kasten 31",
