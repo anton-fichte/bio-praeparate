@@ -177,7 +177,9 @@
     "bild": "/bilder/img_5418.jpg"
   },
   {
-    "stichwoerter": [],
+    "stichwoerter": [
+      "Nahrungsmittel"
+    ],
     "id": "137",
     "name": "Vollmilch ",
     "ort": "Kasten 31 ",
