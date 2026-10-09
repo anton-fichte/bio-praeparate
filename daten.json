@@ -128,7 +128,9 @@
     "bild": "/bilder/img_6888.jpg"
   },
   {
-    "stichwoerter": [],
+    "stichwoerter": [
+      "Pflanze"
+    ],
     "name": "Kakao",
     "id": "126",
     "ort": "Kasten 31",
