@@ -11,19 +11,21 @@ body {
 /* Kopfbereich */
 
 /* Header-Banner Styling */
+/* Kopfbereich */
 header {
-    background: #1f2937;
-    text-align: center;
-    padding: 15px 20px;
+    background: #ffffff; /* Weißer Hintergrund, falls das Bild an Rändern ausläuft */
+    padding: 0;          /* Keine Innenabstände, damit das Bild bis zum Rand geht */
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
 }
 
 .header-banner {
-    max-width: 100%;
-    height: auto;
-    max-height: 120px; /* Je nach Wunsch anpassbar */
+    width: 100%;
+    height: 100%;
+    max-height: 250px;   /* Höhe des Banners (nach Wunsch anpassbar: z. B. 200px bis 300px) */
+    object-fit: cover;   /* Füllt die gesamte Breite und Höhe vollständig aus */
     display: block;
-    margin: 0 auto;
-    object-fit: contain;
 }
 
 header h1 {
