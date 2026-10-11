@@ -12,23 +12,19 @@ body {
 
 /* Header-Banner Styling */
 /* Kopfbereich */
-/* Header Layout */
+/* Header Layout - Volle Bildschirmbreite */
 .main-header {
-    background: #1f2937; /* Dunkler Hintergrund füllt die gesamte Zeile aus */
+    background: #1f2937;
     position: relative;
-    padding: 20px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 140px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
 }
 
 .header-banner {
-    max-width: 100%;
-    height: auto;
-    max-height: 140px; /* Passt die Bannerhöhe an */
-    object-fit: contain; /* Zeigt das gesamte Logo vollständig ohne Beschneiden */
+    width: 100%;       /* Streckt das Bild über die komplette Browserbreite */
+    height: auto;      /* Hält automatisch das perfekte Seitenverhältnis bei */
     display: block;
 }
 
@@ -36,7 +32,7 @@ body {
     position: absolute;
     bottom: 15px;
     left: 20px;
-    background-color: #374151;
+    background-color: rgba(55, 65, 81, 0.85); /* Leicht transparent, damit man es auf dem Bild gut liest */
     color: white;
     padding: 8px 16px;
     border-radius: 6px;
@@ -45,10 +41,11 @@ body {
     font-size: 0.9rem;
     transition: background-color 0.2s ease;
     z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .admin-button:hover {
-    background-color: #4b5563;
+    background-color: rgba(75, 85, 99, 1);
 }
 
 /* Hauptbereich */
