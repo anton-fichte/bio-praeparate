@@ -12,39 +12,31 @@ body {
 
 /* Header-Banner Styling */
 /* Kopfbereich */
-header {
-    background: #ffffff; /* Weißer Hintergrund, falls das Bild an Rändern ausläuft */
-    padding: 0;          /* Keine Innenabstände, damit das Bild bis zum Rand geht */
-    margin: 0;
-    width: 100%;
-    overflow: hidden;
+/* Header Layout */
+.main-header {
+    background: #1f2937; /* Dunkler Hintergrund füllt die gesamte Zeile aus */
+    position: relative;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 140px;
 }
 
 .header-banner {
-    width: 100%;
-    height: 100%;
-    max-height: 250px;   /* Höhe des Banners (nach Wunsch anpassbar: z. B. 200px bis 300px) */
-    object-fit: cover;   /* Füllt die gesamte Breite und Höhe vollständig aus */
+    max-width: 100%;
+    height: auto;
+    max-height: 140px; /* Passt die Bannerhöhe an */
+    object-fit: contain; /* Zeigt das gesamte Logo vollständig ohne Beschneiden */
     display: block;
 }
 
-header h1 {
-    margin: 0 0 10px;
-}
-
-header p {
-    margin: 0;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-}
-
 .admin-button {
-    background-color: #2c3e50;
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    background-color: #374151;
     color: white;
     padding: 8px 16px;
     border-radius: 6px;
@@ -52,12 +44,12 @@ header p {
     font-weight: bold;
     font-size: 0.9rem;
     transition: background-color 0.2s ease;
+    z-index: 10;
 }
 
 .admin-button:hover {
-    background-color: #34495e;
+    background-color: #4b5563;
 }
-
 
 /* Hauptbereich */
 
