@@ -222,7 +222,9 @@
     "bild": "/bilder/img_5404.jpg"
   },
   {
-    "stichwoerter": [],
+    "stichwoerter": [
+      "Getreide"
+    ],
     "id": "145",
     "name": "Weizenmehl mit Saubohnenmehl ",
     "ort": "Kasten 31",
