@@ -632,6 +632,16 @@
   },
   {
     "stichwoerter": [
+      "Querschnitt",
+      "Pflanze"
+    ],
+    "name": "Koniferenblätter",
+    "ort": "Kasten 4",
+    "bild": "/bilder/koniferenblätter.jpeg",
+    "id": "4001"
+  },
+  {
+    "stichwoerter": [
       "Wissenschaftliches Lebensmittel",
       "Narbe"
     ],
