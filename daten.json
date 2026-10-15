@@ -252,7 +252,10 @@
     "bild": "/bilder/img_5388.jpg"
   },
   {
-    "stichwoerter": [],
+    "stichwoerter": [
+      "Getreide",
+      "Calciumsulfat"
+    ],
     "id": "149",
     "name": "Weizenmehl mit Gips ",
     "ort": "Kasten 31 ",
