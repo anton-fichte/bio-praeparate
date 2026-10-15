@@ -121,7 +121,10 @@
     "bild": "/bilder/img_6838.jpg"
   },
   {
-    "stichwoerter": [],
+    "stichwoerter": [
+      "Pflanze",
+      "Nahrungsmittel"
+    ],
     "id": "125",
     "name": "Kakao mit Maisschalen - pulver ",
     "ort": "Kasten 31",
@@ -512,9 +515,7 @@
     "stichwoerter": [
       "Fichtenborkenkäfer",
       "Tier",
-      "Querschnitt",
-      "durch",
-      "Larve"
+      "Querschnitt"
     ],
     "name": "Fichtenborkenkäfer",
     "ort": "Kasten 18",
