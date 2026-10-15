@@ -542,6 +542,20 @@
   },
   {
     "stichwoerter": [
+      "Galium",
+      "blatt",
+      "Klimmhaare",
+      "total",
+      "Pflanze",
+      "Pflanzenorgane"
+    ],
+    "id": "2020",
+    "name": "Labkraut",
+    "ort": "Kasten 28",
+    "bild": "/bilder/20260924_092101.jpg"
+  },
+  {
+    "stichwoerter": [
       "Lilium candidum",
       "Fruchtknoten",
       "quer",
@@ -911,7 +925,7 @@
       "Stelwurzel",
       "quer"
     ],
-    "id": "2003n",
+    "id": "yarak10",
     "name": "Mangrove",
     "ort": "Kasten 28",
     "bild": "/bilder/mangrove.jpg"
