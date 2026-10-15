@@ -919,7 +919,11 @@
     "bild": "/bilder/1000068046.jpg"
   },
   {
-    "stichwoerter": [],
+    "stichwoerter": [
+      "Lichtblatt",
+      "Schattenblatt",
+      "Anzahl10"
+    ],
     "id": "416",
     "name": "Birne",
     "ort": "Kasten 6 ",
